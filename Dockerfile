@@ -4,5 +4,5 @@ RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
 COPY --from=build /target/MindExpanse-Backend-0.0.1-SNAPSHOT.jar MindExpanse-Backend.jar
-EXPOSE 10000
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "MindExpanse-Backend.jar"]
