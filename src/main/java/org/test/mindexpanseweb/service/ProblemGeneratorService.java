@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
-
 public class ProblemGeneratorService {
     private final SecureRandom random = new SecureRandom();
 
