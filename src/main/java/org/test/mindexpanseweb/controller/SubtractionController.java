@@ -11,7 +11,7 @@ import java.util.Random;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://mind-expanse.vercel.app/")
 @RequestMapping("/api/math/subtract")
 @Slf4j
 public class SubtractionController {
