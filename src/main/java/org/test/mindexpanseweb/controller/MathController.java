@@ -1,5 +1,8 @@
 package org.test.mindexpanseweb.controller;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,9 +10,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "https://mind-expanse.vercel.app")
+@CrossOrigin(origins = "http://localhost:5173/")
 @RequestMapping("/api/math")
+@Slf4j
 public class MathController {
+
+    private static final Logger logger = LoggerFactory.getLogger(MathController.class);
     private final Random random = new Random();
 
     // To store generated numbers for validation
@@ -30,7 +36,9 @@ public class MathController {
     // Verify a single answer
     @PostMapping("/verify")
     public ResponseEntity<String> verifyAnswer(@RequestBody Map<String, Integer> request) {
+        logger.info("------------------------");
         int userAnswer = request.get("answer");
+        logger.info("user answer is: {}",userAnswer);
         int correctAnswer = questions.isEmpty() ? -1 : questions.get(0)[0] + questions.get(0)[1];
 
         if (userAnswer == correctAnswer) {
