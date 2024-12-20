@@ -26,7 +26,7 @@ public class SubtractionController {
             @RequestParam(required = false, defaultValue = "singleDigit") String type
     ) {
 
-        logger.info("Generating random numbers for subtraction");
+//        logger.info("Generating random numbers for subtraction");
 
         boolean singleDigit = "singleDigit".equals(type);
 
@@ -68,7 +68,7 @@ public class SubtractionController {
 
 @GetMapping("/test")
     public ResponseEntity<String>test(){
-    logger.info("Test method reached from subtraction controller");
+//    logger.info("Test method reached from subtraction controller");
     return ResponseEntity.ok("Tested successfully!!");
 }
 }
