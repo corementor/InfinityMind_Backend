@@ -9,28 +9,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@CrossOrigin(origins = "https://mind-expanse.vercel.app/")
-@RequestMapping("/api/math")
+@CrossOrigin(origins = "https://mind-expanse.vercel.app")
+@RequestMapping("/api/math/addition")
 @Slf4j
 public class AdditionController {
-
     private static final Logger logger = LoggerFactory.getLogger(AdditionController.class);
     private final Random random = new Random();
 
-    // To store generated numbers for validation
-    private final List<int[]> questions = new ArrayList<>();
 
-    // Generate a single random question
     @GetMapping("/generate")
-    public Map<String, Integer> generateNumbers() {
-        int number1 = random.nextInt(100); // Random number between 0-99
-        int number2 = random.nextInt(100);
+    public Map<String, Integer> generateNumbers(
+            @RequestParam(required = false, defaultValue = "singleDigit") String type
+    ) {
+        logger.info("Generating random numbers for addition");
+        boolean singleDigit = "singleDigit".equals(type);
+
+        int number1 = singleDigit ? random.nextInt(10) : random.nextInt(100);
+        int number2 = singleDigit ? random.nextInt(10) : random.nextInt(100);
+
 
         return Map.of("number1", number1, "number2", number2);
     }
 
 
-    // Verify multiple answers at once
+
     @PostMapping("/verify-all")
     public ResponseEntity<Map<String, Object>> verifyAllAnswers(@RequestBody List<Map<String, Object>> userAnswerWithQuestions) {
         List<String> results = new ArrayList<>();
@@ -50,13 +52,20 @@ public class AdditionController {
                 results.add("Incorrect. The correct answer is :" + correctAnswer);
             }
         }
-            return ResponseEntity.ok(
-                    Map.of(
-                            "results", results,
-                            "score", correctCount,
-                            "total", userAnswerWithQuestions.size()
-                    )
-            );
+        return ResponseEntity.ok(
+                Map.of(
+                        "results", results,
+                        "score", correctCount,
+                        "total", userAnswerWithQuestions.size()
+                )
+        );
 
+    }
+
+
+    @GetMapping("/test")
+    public ResponseEntity<String>test(){
+        logger.info("Test method reached from addition controller");
+        return ResponseEntity.ok("Tested successfully!!");
     }
 }
