@@ -21,7 +21,7 @@ public class AdditionController {
     public Map<String, Integer> generateNumbers(
             @RequestParam(required = false, defaultValue = "singleDigit") String type
     ) {
-        logger.info("Generating random numbers for addition");
+//        logger.info("Generating random numbers for addition");
         boolean singleDigit = "singleDigit".equals(type);
 
         int number1 = singleDigit ? random.nextInt(10) : random.nextInt(100);
@@ -65,7 +65,7 @@ public class AdditionController {
 
     @GetMapping("/test")
     public ResponseEntity<String>test(){
-        logger.info("Test method reached from addition controller");
+//        logger.info("Test method reached from addition controller");
         return ResponseEntity.ok("Tested successfully!!");
     }
 }
