@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@CrossOrigin(origins = "https://mind-expanse.vercel.app")
+@CrossOrigin(origins = "https://mind-expanse.vercel.app/")
 @RequestMapping("/api/math/addition")
 @Slf4j
 public class AdditionController {
