@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "https://mind-expanse.vercel.app")
+@CrossOrigin(origins = "http://localhost:5173/")
 @RequestMapping("/api/math")
 public class MathController {
     private final Random random = new Random();
