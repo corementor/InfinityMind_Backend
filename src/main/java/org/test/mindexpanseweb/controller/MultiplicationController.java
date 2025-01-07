@@ -1,21 +1,21 @@
 package org.test.mindexpanseweb.controller;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 @RestController
-@CrossOrigin(origins = "https://mind-expanse.vercel.app/")
 //@CrossOrigin(origins = "http://localhost:5173/")
-@RequestMapping("/api/math/addition")
-
+@CrossOrigin(origins = "https://mind-expanse.vercel.app")
+@RequestMapping("/api/math/multiply")
 @Slf4j
-public class AdditionController {
+public class MultiplicationController {
     private static final Logger logger = LoggerFactory.getLogger(AdditionController.class);
     private final Random random = new Random();
 
@@ -46,7 +46,7 @@ public class AdditionController {
             int number2 = ((Number) questionAnswer.get("number2")).intValue();
             int userAnswer = ((Number) questionAnswer.get("answer")).intValue();
 
-            int correctAnswer = number1 + number2;
+            int correctAnswer = number1 * number2;
 
             if (correctAnswer == userAnswer) {
                 results.add("Correct");
