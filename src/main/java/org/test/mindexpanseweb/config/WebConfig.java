@@ -9,13 +9,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig {
     @Bean
     public WebMvcConfigurer webMvcConfigurer() {
-        // Implement custom WebSecurityConfig class here.
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173")
+                        .allowedOrigins("https://mind-expanse.vercel.app/")
                         .allowedMethods("GET", "PUT", "POST", "DELETE", "OPTIONS")
+                        /*.allowedHeaders("Authorization")
+                        .allowedHeaders("Content-Type")
+                        .exposedHeaders("Authorization")*/
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }

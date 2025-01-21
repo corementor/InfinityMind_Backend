@@ -1,7 +1,10 @@
 package org.test.mindexpanseweb.service;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityExistsException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,6 +32,9 @@ public class AuthenticationService implements IAuthenticationService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public AuthResponse registerUser(Userdto userdto) {
         validateUserDto(userdto);
@@ -40,16 +46,24 @@ public class AuthenticationService implements IAuthenticationService {
         }
 
         User user = new User();
-
         user.setFirstName(userdto.getFirstName());
         user.setLastName(userdto.getLastName());
-        user.setUsername(createUsername(userdto));
+        String username = createUsername(userdto);
+        user.setUsername(username);
         user.setEmail(userdto.getEmail());
         user.setPassword(passwordEncoder.encode(userdto.getPassword()));
         userRepository.save(user);
 
+        // Send welcome email
+        try {
+            emailService.sendWelcomeEmail(user.getEmail(), username, user.getFirstName());
+        } catch (MessagingException e) {
+            // Log the error but don't prevent user registration
+            // Consider implementing a retry mechanism or queueing system
+            e.printStackTrace();
+        }
         String token = jwtService.generateToken(user);
-        return new AuthResponse(user.getFirstName() + " " + user.getLastName(), user.getEmail(), token);
+        return new AuthResponse(user.getFirstName() + " " + user.getLastName(), user.getEmail(),username, token);
     }
 
     private void validateUserDto(Userdto userdto) {
@@ -84,6 +98,7 @@ public class AuthenticationService implements IAuthenticationService {
         return new AuthResponse(
                 user.getFirstName() + " " + user.getLastName(),
                 user.getEmail(),
+                user.getUsername(),
                 token
         );
     }
