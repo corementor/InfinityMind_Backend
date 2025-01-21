@@ -82,7 +82,6 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     public AuthResponse authenticate(LoginDto request) {
-
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -98,7 +97,6 @@ public class AuthenticationService implements IAuthenticationService {
         return new AuthResponse(
                 user.getFirstName() + " " + user.getLastName(),
                 user.getEmail(),
-                user.getUsername(),
                 token
         );
     }

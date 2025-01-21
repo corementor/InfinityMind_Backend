@@ -47,11 +47,7 @@ public class AuthController {
 
     @GetMapping("/user-info")
     public Map<String, Object> user(/*@AuthenticationPrincipal OAuth2User principal*/) {
-
         Map<String, Object> userInfo = new HashMap<>();
-        /*if (principal == null) {
-            throw new EntityNotFoundException("No object found");
-        }*/
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof AnonymousAuthenticationToken) {
             return null;
