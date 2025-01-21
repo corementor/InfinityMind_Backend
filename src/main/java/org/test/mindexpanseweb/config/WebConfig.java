@@ -13,7 +13,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://mind-expanse.vercel.app/")
+                        .allowedOrigins("https://mind-expanse.vercel.app")
                         .allowedMethods("GET", "PUT", "POST", "DELETE", "OPTIONS")
                         /*.allowedHeaders("Authorization")
                         .allowedHeaders("Content-Type")

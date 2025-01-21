@@ -39,18 +39,19 @@ public class SecurityConfig {
     private JwtAuthFilter jwtAuthFilter;
     @Autowired
     private MyUserDetailService userDetailService;
-    @Autowired
-    private IUserService userService;
+   /* @Autowired
+    private IUserService userService;*/
 
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://mind-expanse.vercel.app/"));
+        configuration.setAllowedOrigins(Arrays.asList("https://mind-expanse.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization","Content-Type","Access-Control-Allow-Origin","Access-Control-Allow-Headers","Access-Control-Allow-Methods","Access-Control-Allow-Credentials"));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -76,7 +77,6 @@ public class SecurityConfig {
 
                 )
                 .build();
-
 
     }
     @Bean
