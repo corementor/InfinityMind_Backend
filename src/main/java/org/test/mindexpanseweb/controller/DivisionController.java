@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Random;
 
 @RestController
-//@CrossOrigin(origins = "https://mind-expanse.vercel.app")
-@CrossOrigin("http://localhost:5173/")
+@CrossOrigin(origins = "https://mind-expanse.vercel.app")
+//@CrossOrigin("http://localhost:5173/")
 @RequestMapping("/api/math/division")
 @Slf4j
 public class DivisionController {

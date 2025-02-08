@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 @RestController
-@CrossOrigin(origins = "http://localhost:5173/")
-//@CrossOrigin(origins = "https://mind-expanse.vercel.app")
+//@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = "https://mind-expanse.vercel.app")
 @RequestMapping("/api/math/multiply")
 @Slf4j
 public class MultiplicationController {
