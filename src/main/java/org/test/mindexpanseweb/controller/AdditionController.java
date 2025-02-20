@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-
 @RestController
 @CrossOrigin(origins = "https://mind-expanse.vercel.app")
 //@CrossOrigin(origins = "http://localhost:5173/")
@@ -19,13 +18,21 @@ public class AdditionController {
     private final Random random = new Random();
 
     /**
-     * Generates a random number within a specified range
+     * Generates a random number within a specified range.
+     *
+     * @param min The minimum value (inclusive).
+     * @param max The maximum value (inclusive).
+     * @return A random integer between min and max.
      */
     private int generateRandomNumber(int min, int max) {
         return min + random.nextInt(max - min + 1);
     }
+
     /**
-     * Generates two numbers that when added together won't exceed 100
+     * Generates two numbers that, when added together, won't exceed 100.
+     *
+     * @param singleDigit If true, generates single-digit numbers; otherwise, generates two-digit numbers.
+     * @return A map containing the two numbers ("number1" and "number2").
      */
     private Map<String, Integer> generateCompatibleNumbers(boolean singleDigit) {
         int number1, number2;
@@ -41,6 +48,12 @@ public class AdditionController {
         return Map.of("number1", number1, "number2", number2);
     }
 
+    /**
+     * Generates two numbers based on the specified type (singleDigit or fourDigit).
+     *
+     * @param type The type of numbers to generate ("singleDigit" or "fourDigit").
+     * @return A map containing the two numbers ("number1" and "number2").
+     */
     @GetMapping("/generate")
     public Map<String, Integer> generateNumbers(
             @RequestParam(required = false, defaultValue = "singleDigit") String type
@@ -55,6 +68,12 @@ public class AdditionController {
         return generateCompatibleNumbers(singleDigit);
     }
 
+    /**
+     * Verifies the user's answers against the correct answers and returns the results.
+     *
+     * @param userAnswerWithQuestions A list of maps containing the user's answers and the corresponding questions.
+     * @return A ResponseEntity containing the results, score, and total number of questions.
+     */
     @PostMapping("/verify-all")
     public ResponseEntity<Map<String, Object>> verifyAllAnswers(@RequestBody List<Map<String, Object>> userAnswerWithQuestions) {
         List<String> results = new ArrayList<>();
@@ -84,8 +103,5 @@ public class AdditionController {
         );
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Tested successfully!!");
-    }
+
 }

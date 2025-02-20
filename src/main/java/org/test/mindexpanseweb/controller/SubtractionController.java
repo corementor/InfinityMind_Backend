@@ -6,11 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "https://mind-expanse.vercel.app")
@@ -21,23 +17,30 @@ public class SubtractionController {
     private static final Logger logger = LoggerFactory.getLogger(SubtractionController.class);
     private final Random random = new Random();
 
-
+    /**
+     * Generates two numbers for a subtraction problem.
+     *
+     * @param type The type of numbers to generate ("singleDigit" or "multipleDigit").
+     * @return A map containing the two numbers ("number1" and "number2").
+     */
     @GetMapping("/generate")
     public Map<String, Integer> generateNumbers(
             @RequestParam(required = false, defaultValue = "singleDigit") String type
     ) {
-
-//        logger.info("Generating random numbers for subtraction");
-
         boolean singleDigit = "singleDigit".equals(type);
 
-        int number1 =  singleDigit ? random.nextInt(9)+1 :   random.nextInt(90) + 10;
-        int number2 = random.nextInt(number1);
+        int number1 = singleDigit ? random.nextInt(9) + 1 : random.nextInt(90) + 10; // Number between 1-9 or 10-99
+        int number2 = random.nextInt(number1); // Ensures number2 is less than number1
 
         return Map.of("number1", number1, "number2", number2);
     }
 
-
+    /**
+     * Verifies the user's answers against the correct answers and returns the results.
+     *
+     * @param userAnswersWithQuestions A list of maps containing the user's answers and the corresponding questions.
+     * @return A ResponseEntity containing the results, score, and total number of questions.
+     */
     @PostMapping("/verify-all")
     public ResponseEntity<Map<String, Object>> verifyAllAnswers(
             @RequestBody List<Map<String, Object>> userAnswersWithQuestions) {
@@ -66,10 +69,4 @@ public class SubtractionController {
                 "total", userAnswersWithQuestions.size()
         ));
     }
-
-@GetMapping("/test")
-    public ResponseEntity<String>test(){
-//    logger.info("Test method reached from subtraction controller");
-    return ResponseEntity.ok("Tested successfully!!");
-}
 }
