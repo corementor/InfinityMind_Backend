@@ -38,7 +38,7 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public AuthResponse registerUser(Userdto userdto) {
         validateUserDto(userdto);
-        String email = userdto.getEmail();
+        String email = userdto.getEmail().toLowerCase();
 
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isPresent()) {
@@ -50,7 +50,7 @@ public class AuthenticationService implements IAuthenticationService {
         user.setLastName(userdto.getLastName());
         String username = createUsername(userdto);
         user.setUsername(username);
-        user.setEmail(userdto.getEmail());
+        user.setEmail(email);
         user.setPassword(passwordEncoder.encode(userdto.getPassword()));
         userRepository.save(user);
 
