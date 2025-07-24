@@ -12,7 +12,7 @@ import java.util.*;
 //@CrossOrigin(origins = "http://localhost:5173/")
 @CrossOrigin(origins = "https://mind-expanse.vercel.app")
 
-@RequestMapping("/api/math/multiply")
+@RequestMapping("/api/v1/math/multiply")
 @Slf4j
 public class MultiplicationController {
     private static final Logger logger = LoggerFactory.getLogger(MultiplicationController.class);

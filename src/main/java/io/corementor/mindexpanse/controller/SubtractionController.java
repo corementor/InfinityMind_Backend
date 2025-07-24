@@ -11,7 +11,7 @@ import java.util.*;
 @RestController
 @CrossOrigin(origins = "https://mind-expanse.vercel.app")
 //@CrossOrigin(origins = "http://localhost:5173/")
-@RequestMapping("/api/math/subtract")
+@RequestMapping("/api/v1/math/subtract")
 @Slf4j
 public class SubtractionController {
     private static final Logger logger = LoggerFactory.getLogger(SubtractionController.class);

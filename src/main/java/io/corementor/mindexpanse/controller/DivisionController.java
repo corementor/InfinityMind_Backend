@@ -12,7 +12,7 @@ import java.util.*;
 //@CrossOrigin("http://localhost:5173/")
 @CrossOrigin(origins = "https://mind-expanse.vercel.app")
 
-@RequestMapping("/api/math/division")
+@RequestMapping("/api/v1/math/division")
 @Slf4j
 public class DivisionController {
     private static final Logger logger = LoggerFactory.getLogger(DivisionController.class);

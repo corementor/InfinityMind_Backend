@@ -94,5 +94,19 @@ public class NumberGeneratorService {
             System.out.println();
         }
     }
+    /**
+     *  extractDigits
+     * @param number number
+     * @return int[]
+     */
+    public int[] extractDigits(int number) {
+        int[] digits = new int[4]; // ones, tens, hundreds, thousands
+        for (int i = 0; i < 4; i++) {
+            digits[i] = number % 10;
+            number /= 10;
+        }
+        return digits;
+    }
+
 
 }
