@@ -8,8 +8,9 @@ import java.util.Random;
 public class NumberGeneratorService {
 
 
-    public static void main(String[] args) {
-        /*Random random = new Random();
+   /*
+   public static void main(String[] args) {
+        /Random random = new Random();
         int array[][] = new int[2][3];
 
         for (int i = 0; i < array.length; i++) {
@@ -45,11 +46,11 @@ public class NumberGeneratorService {
         System.out.println("Minimum number is: "+min);
         System.out.println("Maximum number is: "+max);
         System.out.println("Average number is: "+sum/counter);
-*/
 
-        /*int[][] test = generateRandom2DArray(2, 3, 1, 10);
-        printArray(test);*/
-    }
+
+        int[][] test = generateRandom2DArray(2, 3, 1, 10);
+        printArray(test);*//*
+    }*/
 
     /**
      * Generates a 2D array with random numbers within a specified range
