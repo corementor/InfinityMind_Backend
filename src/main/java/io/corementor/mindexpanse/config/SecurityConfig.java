@@ -43,7 +43,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-     configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173/","https://mind-expanse.vercel.app/"));
+     configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173/","https://mind-expanse.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization","Content-Type","Access-Control-Allow-Origin","Access-Control-Allow-Headers","Access-Control-Allow-Methods","Access-Control-Allow-Credentials"));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));
@@ -60,14 +60,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**", "/oauth2/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(auth2->auth2
+                /*.oauth2Login(auth2->auth2
                         .defaultSuccessUrl("https://mind-expanse.vercel.app/dashboard",true)
-                )
+                )*/
                 .userDetailsService(userDetailService)
-//                .authenticationProvider(authenticationProvider())
+                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
