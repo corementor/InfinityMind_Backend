@@ -7,7 +7,6 @@ import java.util.Random;
 @Service
 public class NumberGeneratorService {
 
-
    /*
    public static void main(String[] args) {
         /Random random = new Random();

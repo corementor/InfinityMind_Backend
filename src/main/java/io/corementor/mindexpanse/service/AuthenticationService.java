@@ -3,7 +3,7 @@ package io.corementor.mindexpanse.service;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityExistsException;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,22 +18,15 @@ import io.corementor.mindexpanse.repository.IUserRepository;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class AuthenticationService implements IAuthenticationService {
 
-    @Autowired
-    private IUserRepository userRepository;
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private EmailService emailService;
+    private final IUserRepository userRepository;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Override
     public AuthResponse registerUser(Userdto userdto) {
@@ -63,7 +56,7 @@ public class AuthenticationService implements IAuthenticationService {
             e.printStackTrace();
         }
         String token = jwtService.generateToken(user);
-        return new AuthResponse(user.getFirstName() + " " + user.getLastName(), user.getEmail(),username, token);
+        return new AuthResponse(user.getFirstName() + " " + user.getLastName(), user.getEmail(), username, token);
     }
 
     private void validateUserDto(Userdto userdto) {

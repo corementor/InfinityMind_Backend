@@ -11,13 +11,17 @@ import io.corementor.mindexpanse.service.NumberGeneratorService;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/v1/math/addition")
+@RequestMapping("/api/v1/math")
 @Slf4j
 @RequiredArgsConstructor
 public class MathController {
-    /*The numberGeneratorService is used to generate random numbers*/
+    /**
+     * The numberGeneratorService is used to generate random numbers
+     */
     private final NumberGeneratorService numberGeneratorService;
-    /*The calculationService is used to calculate the  user's answers*/
+    /**
+     * The calculationService is used to calculate the  user's answers
+     */
     private final CalculationService calculationService;
 
     /**
@@ -59,6 +63,19 @@ public class MathController {
     @PostMapping("/verify-multiplication")
     public ResponseEntity<Map<String, Object>> verifyMultiplication(@RequestBody List<Map<String, Object>> userAnswerWithQuestions) {
         Map<String, Object> results = calculationService.calculateMultiplication(userAnswerWithQuestions);
+        return ResponseEntity.status(HttpStatus.OK).body(results);
+    }
+
+    /**
+     * Verifies the user's answers against the correct answers and returns the results.
+     *
+     * @param userAnswerWithQuestions userAnswerWithQuestions
+     * @return A ResponseEntity containing the results, score, and total number of questions
+     */
+
+    @PostMapping("/verify-division")
+    public ResponseEntity<Map<String, Object>> verifyDivision(@RequestBody List<Map<String, Object>> userAnswerWithQuestions) {
+        Map<String, Object> results = calculationService.calculateDivision(userAnswerWithQuestions);
         return ResponseEntity.status(HttpStatus.OK).body(results);
     }
 

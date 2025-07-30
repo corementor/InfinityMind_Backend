@@ -4,6 +4,7 @@ import jakarta.persistence.EntityExistsException;
 
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,18 +28,13 @@ import io.corementor.mindexpanse.service.MyUserDetailService;
 import java.util.HashMap;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
-    @Autowired
-    private IUserRepository userRepository;
-    @Autowired
-    private AuthenticationService authService;
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private MyUserDetailService userDetailsService;
+
+    private final AuthenticationService authService;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginDto loginRequest) {

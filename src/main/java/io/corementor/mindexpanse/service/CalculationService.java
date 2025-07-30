@@ -339,4 +339,149 @@ public class CalculationService {
         return finalResult;
     }
 
+    public Map<String, Object> calculateDivision(List<Map<String, Object>> userAnswerWithQuestions) {
+        List<String> results = new ArrayList<>();
+        List<Map<String, Boolean>> stepValidationResults = new ArrayList<>();
+        List<Map<String, Integer>> correctStepsList = new ArrayList<>();
+        List<Map<String, Integer>> correctRemaindersList = new ArrayList<>();
+        int totalScore = 0;
+        final int MAX_SCORE_PER_QUESTION = 4; // Points for answer, quotient digits, and remainder
+
+        for (Map<String, Object> questionAnswer : userAnswerWithQuestions) {
+            int dividend = ((Number) questionAnswer.get("number1")).intValue();
+            int divisor = ((Number) questionAnswer.get("number2")).intValue();
+            int userQuotient = ((Number) questionAnswer.get("answer")).intValue();
+            int userRemainder = ((Number) questionAnswer.get("remainder")).intValue();
+
+            // Get user's step inputs
+            Map<String, Integer> userSteps = (Map<String, Integer>) questionAnswer.get("steps");
+            Map<String, Integer> userRemainders = (Map<String, Integer>) questionAnswer.get("intermediateRemainders");
+
+            int correctQuotient = dividend / divisor;
+            int correctRemainder = dividend % divisor;
+
+            Map<String, Integer> correctSteps = new HashMap<>();
+            Map<String, Boolean> stepValidation = new HashMap<>();
+            Map<String, Integer> correctIntermediateRemainders = new HashMap<>();
+            int questionScore = 0;
+
+            // Calculate division steps
+            int[] dividendDigits = numberGeneratorService.extractDigits(dividend);
+            int[] divisorDigits = numberGeneratorService.extractDigits(divisor);
+
+            // Long division steps
+            int currentDividend = 0;
+            int step = 0;
+            int[] partialDividends = new int[3];
+            int[] partialQuotients = new int[3];
+            int[] partialRemainders = new int[3];
+
+            // Step 1: First partial division (thousands place)
+            if (dividend >= 1000) {
+                currentDividend = dividendDigits[3] * 1000 + dividendDigits[2] * 100;
+                partialQuotients[0] = currentDividend / divisor;
+                partialRemainders[0] = currentDividend % divisor;
+                partialDividends[0] = currentDividend;
+                correctSteps.put("step1", partialQuotients[0]);
+                correctIntermediateRemainders.put("remainder1", partialRemainders[0]);
+                step++;
+            }
+
+            // Step 2: Second partial division (hundreds place)
+            if (dividend >= 100) {
+                currentDividend = partialRemainders[0] * 100 + dividendDigits[1] * 10;
+                if (step == 0) {
+                    currentDividend = dividendDigits[3] * 1000 + dividendDigits[2] * 100 + dividendDigits[1] * 10;
+                }
+                partialQuotients[1] = currentDividend / divisor;
+                partialRemainders[1] = currentDividend % divisor;
+                partialDividends[1] = currentDividend;
+                correctSteps.put("step2", partialQuotients[1]);
+                correctIntermediateRemainders.put("remainder2", partialRemainders[1]);
+                step++;
+            }
+
+            // Step 3: Final partial division (tens and ones place)
+            currentDividend = partialRemainders[1] * 10 + dividendDigits[0];
+            if (step == 0) {
+                currentDividend = dividend;
+            } else if (step == 1) {
+                currentDividend = partialRemainders[0] * 100 + dividendDigits[1] * 10 + dividendDigits[0];
+            }
+            partialQuotients[2] = currentDividend / divisor;
+            partialRemainders[2] = currentDividend % divisor;
+            partialDividends[2] = currentDividend;
+            correctSteps.put("step3", partialQuotients[2]);
+            correctIntermediateRemainders.put("remainder3", partialRemainders[2]);
+
+            // Verify user's steps
+            boolean stepsCorrect = true;
+            for (int i = 0; i < 3; i++) {
+                if (userSteps.getOrDefault("step" + (i + 1), -1) != partialQuotients[i]) {
+                    stepValidation.put("step" + (i + 1) + "Correct", false);
+                    stepsCorrect = false;
+                } else {
+                    stepValidation.put("step" + (i + 1) + "Correct", true);
+                }
+
+                if (userRemainders.getOrDefault("remainder" + (i + 1), -1) != partialRemainders[i]) {
+                    stepValidation.put("remainder" + (i + 1) + "Correct", false);
+                    stepsCorrect = false;
+                } else {
+                    stepValidation.put("remainder" + (i + 1) + "Correct", true);
+                }
+            }
+
+            boolean quotientCorrect = correctQuotient == userQuotient;
+            boolean remainderCorrect = correctRemainder == userRemainder;
+
+            // Scoring
+            if (quotientCorrect) {
+                questionScore += 2; // Base points for correct answer
+                if (remainderCorrect) {
+                    questionScore += 1; // Additional point for correct remainder
+                }
+                if (stepsCorrect) {
+                    questionScore += 1; // Additional point for correct steps
+                }
+            }
+            totalScore += questionScore;
+
+            // Result message
+            String resultMessage;
+            if (quotientCorrect && remainderCorrect && stepsCorrect) {
+                resultMessage = "Perfect! All steps and answers correct";
+            } else if (quotientCorrect && remainderCorrect) {
+                resultMessage = "Answer correct but some steps wrong";
+            } else if (quotientCorrect && stepsCorrect) {
+                resultMessage = "Quotient and steps correct but remainder wrong";
+            } else if (quotientCorrect) {
+                resultMessage = "Only final quotient correct";
+            } else if (stepsCorrect) {
+                resultMessage = "Steps correct but final answer wrong";
+            } else {
+                resultMessage = "Multiple errors in calculation";
+            }
+
+            results.add(resultMessage);
+            stepValidationResults.add(stepValidation);
+            correctStepsList.add(correctSteps);
+            correctRemaindersList.add(correctIntermediateRemainders);
+        }
+
+        int maxPossibleScore = userAnswerWithQuestions.size() * MAX_SCORE_PER_QUESTION;
+        int percentageScore = maxPossibleScore > 0 ? (totalScore * 100) / maxPossibleScore : 0;
+
+        Map<String, Object> finalResult = new HashMap<>();
+        finalResult.put("results", results);
+        finalResult.put("score", totalScore);
+        finalResult.put("percentage", percentageScore);
+        finalResult.put("maxScore", maxPossibleScore);
+        finalResult.put("total", userAnswerWithQuestions.size());
+        finalResult.put("correctSteps", correctStepsList);
+        finalResult.put("correctRemainders", correctRemaindersList);
+        finalResult.put("stepValidation", stepValidationResults);
+        return finalResult;
+    }
+
 }
