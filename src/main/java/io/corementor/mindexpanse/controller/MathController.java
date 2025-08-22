@@ -1,5 +1,6 @@
 package io.corementor.mindexpanse.controller;
 
+import io.corementor.mindexpanse.dto.DivisionQuestion;
 import io.corementor.mindexpanse.service.CalculationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -103,5 +104,21 @@ public class MathController {
         return numberGeneratorService.generateRandom2DArray(rows, cols, min, max);
     }
 
+    /**
+     * generateDivisionQuestion
+     * @param count count
+     * @param min min
+     * @param max max
+     * @return List
+     */
+    @GetMapping("/generate-division")
+    public List<DivisionQuestion> generateDivisionQuestions(
+            @RequestParam(defaultValue = "5") int count,
+            @RequestParam(defaultValue = "10") int min,
+            @RequestParam(defaultValue = "999") int max
+    ) {
+        List<DivisionQuestion> array=numberGeneratorService.generateDivisionQuestions(count, min, max);
+         return numberGeneratorService.generateDivisionQuestions(count, min, max);
+    }
 
 }

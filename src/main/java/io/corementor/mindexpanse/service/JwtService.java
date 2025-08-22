@@ -12,23 +12,46 @@ import io.corementor.mindexpanse.model.User;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
+    @Value("${security.jwt.secret-key}")
+    private String SECRET_KEY;
+
+    @Value("${security.jwt.access-expiration-time}")
+    private long ACCESS_EXPIRATION_TIME;
+
     @Value("${security.jwt.refresh-expiration-time}")
     private long REFRESH_EXPIRATION_TIME;
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
     public Set<String> extractRoles(String token) {
         return extractClaim(token, claims -> claims.get("roles", Set.class));
     }
+
+    public String extractTokenType(String token) {
+        return extractClaim(token, claims -> claims.get("token_type", String.class));
+    }
+
     public boolean isValid(String token, UserDetails user) {
         String username = extractUsername(token);
         return (username.equals(user.getUsername()) && !isTokenExpired(token));
     }
-    private boolean isTokenExpired(String token) {
+
+    public boolean isRefreshToken(String token) {
+        return "refresh".equals(extractTokenType(token));
+    }
+
+    public boolean isAccessToken(String token) {
+        return "access".equals(extractTokenType(token));
+    }
+
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
@@ -40,30 +63,68 @@ public class JwtService {
         Claims claims = extractAllClaims(token);
         return resolver.apply(claims);
     }
+
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
-                .setSigningKey(getSignInKey())
+                .verifyWith(getSignInKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
-    public String generateToken(User user) {
+    public String generateAccessToken(User user) {
         return Jwts
                 .builder()
                 .subject(user.getUsername())
                 .claim("email", user.getEmail())
+                .claim("token_type", "access")
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
+                .expiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
                 .signWith(getSignInKey())
                 .compact();
+    }
 
+    public String generateRefreshToken(User user) {
+        return Jwts
+                .builder()
+                .subject(user.getUsername())
+                .claim("token_type", "refresh")
+                .claim("jti", UUID.randomUUID().toString()) // Unique token identifier
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
+                .signWith(getSignInKey())
+                .compact();
     }
 
     private SecretKey getSignInKey() {
-        String SECRET_KEY = "c52ce3add79d1f83d7d6491ee228bee2126978012e17253627e94f4607981e9a0a89833014d45361c351443a937c809f1f362c36e26ef118c1c5ec1edf7a803a5c72c5e5506a96f0198c789fcf352e050ee83620a43c4f1f003e048ea207f7542cf9b76ecefb56c7407c69ff0980a250d415b3a654d6425fa0c0c0b528df53b186674fcd4be53192d5e10b88d42e4bc2001ab386155e3734398092c3d11708dfccb7f72a5011516283ae4503acc67bfdc0f28249d69a70b78986fe13738088bc925973cb166274d325a2c54a9455f78e9c80a05af906baf6e0faac7873129a481b493f4a325781cfbedee1c2c826497a7af78d8c69a572b712f90705bebd3338";
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            if (token == null || token.trim().isEmpty()) {
+                return false;
+            }
+
+            // Check if token is expired
+            if (isTokenExpired(token)) {
+                return false;
+            }
+
+            // Check if it's an access token
+            if (!isAccessToken(token)) {
+                return false;
+            }
+
+            // Try to extract username (this will throw exception if token is malformed)
+            String username = extractUsername(token);
+            return username != null && !username.trim().isEmpty();
+
+        } catch (Exception e) {
+            System.err.println("Token validation error: " + e.getMessage());
+            return false;
+        }
     }
 }

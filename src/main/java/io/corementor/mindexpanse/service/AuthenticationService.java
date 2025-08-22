@@ -1,5 +1,6 @@
 package io.corementor.mindexpanse.service;
 
+import io.corementor.mindexpanse.dto.RefreshTokenRequest;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityExistsException;
 
@@ -28,6 +29,85 @@ public class AuthenticationService implements IAuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
+    public AuthResponse authenticate(LoginDto request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
+
+        User user = userRepository.findUsersByUsername(request.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        return new AuthResponse(
+                user.getFirstName() + " " + user.getLastName(),
+                user.getEmail(),
+                user.getUsername(),
+                accessToken,
+                refreshToken,
+                "Login Successfully"
+        );
+    }
+    public AuthResponse refreshToken(RefreshTokenRequest request) {
+        try {
+            String refreshToken = request.getRefreshToken();
+
+            if (refreshToken == null || refreshToken.trim().isEmpty()) {
+                throw new IllegalArgumentException("Refresh token is required");
+            }
+
+            if (!jwtService.isRefreshToken(refreshToken)) {
+                throw new IllegalArgumentException("Invalid refresh token type");
+            }
+
+            if (jwtService.isTokenExpired(refreshToken)) {
+                throw new IllegalArgumentException("Refresh token has expired");
+            }
+
+            String username = jwtService.extractUsername(refreshToken);
+            User user = userRepository.findUsersByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+            // Validate refresh token against user
+            if (!jwtService.isValid(refreshToken, user)) {
+                throw new IllegalArgumentException("Invalid refresh token for user");
+            }
+
+            String newAccessToken = jwtService.generateAccessToken(user);
+            String newRefreshToken = jwtService.generateRefreshToken(user);
+
+            return new AuthResponse(
+                    user.getFirstName() + " " + user.getLastName(),
+                    user.getEmail(),
+                    user.getUsername(),
+                    newAccessToken,
+                    newRefreshToken,
+                    "Tokens refreshed successfully"
+            );
+
+        } catch (IllegalArgumentException e) {
+            throw e; // Re-throw validation errors
+        } catch (Exception e) {
+            System.err.println("Unexpected error during token refresh: " + e.getMessage());
+            throw new RuntimeException("Token refresh failed due to server error");
+        }
+    }
+
+
+    public String createUsername(Userdto userdto) {
+        String baseUsername = (userdto.getFirstName().toLowerCase() + "." + userdto.getLastName().toLowerCase()).replaceAll("\\s+", "");
+        String username = baseUsername;
+        int suffix = 1;
+        while (userRepository.findUsersByUsername(username).isPresent()) {
+            username = baseUsername + suffix;
+            suffix++;
+        }
+        return username;
+    }
     @Override
     public AuthResponse registerUser(Userdto userdto) {
         validateUserDto(userdto);
@@ -47,16 +127,23 @@ public class AuthenticationService implements IAuthenticationService {
         user.setPassword(passwordEncoder.encode(userdto.getPassword()));
         userRepository.save(user);
 
-        // Send welcome email
         try {
             emailService.sendWelcomeEmail(user.getEmail(), username, user.getFirstName());
         } catch (MessagingException e) {
-            // Log the error but don't prevent user registration
-            // Consider implementing a retry mechanism or queueing system
             e.printStackTrace();
         }
-        String token = jwtService.generateToken(user);
-        return new AuthResponse(user.getFirstName() + " " + user.getLastName(), user.getEmail(), username, token);
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        return new AuthResponse(
+                user.getFirstName() + " " + user.getLastName(),
+                user.getEmail(),
+                username,
+                accessToken,
+                refreshToken,
+                "Account registered successfully"
+        );
     }
 
     private void validateUserDto(Userdto userdto) {
@@ -73,37 +160,5 @@ public class AuthenticationService implements IAuthenticationService {
             throw new IllegalArgumentException("Password cannot be null or empty");
         }
     }
-
-    public AuthResponse authenticate(LoginDto request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
-
-        // Then fetch the user
-        User user = userRepository.findUsersByUsername(request.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        String token = jwtService.generateToken(user);
-        return new AuthResponse(
-                user.getFirstName() + " " + user.getLastName(),
-                user.getEmail(),
-                token
-        );
-    }
-
-    public String createUsername(Userdto userdto) {
-        String baseUsername = (userdto.getFirstName().toLowerCase() + "." + userdto.getLastName().toLowerCase()).replaceAll("\\s+", "");
-        String username = baseUsername;
-        int suffix = 1;
-        while (userRepository.findUsersByUsername(username).isPresent()) {
-            username = baseUsername + suffix;
-            suffix++;
-        }
-        return username;
-    }
-
 
 }

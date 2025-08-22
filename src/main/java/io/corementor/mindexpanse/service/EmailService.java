@@ -68,18 +68,18 @@ public class EmailService {
                     </div>
                     <div class="content">
                         <h2>Hello %s,</h2>
-                        <p>Thank you for joining Mind Expanse! We're excited to have you as part of our community.</p>
+                        <p>Thank you for joining Mind Expanse! An online math worksheet, We're excited to have you as part of our community.</p>
                         <p>Your username has been successfully created:</p>
                         <div class="username-box">
                             %s
                         </div>
                         <p>You can use this username to log in to your account. Keep it safe!</p>
                         <p>If you have any questions or need assistance, don't hesitate to contact our support team.</p>
-                        <p>Best regards,<br>The Mind Expanse Team</p>
+                        <p>Best regards,<br>The Core Mentor Team</p>
                     </div>
                     <div class="footer">
                         <p>This is an automated message, please do not reply directly to this email.</p>
-                        <p>© 2024 Mind Expanse. All rights reserved.</p>
+                        <p>© 2025 Core Mentor. All rights reserved.</p>
                     </div>
                 </div>
             </body>

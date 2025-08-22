@@ -1,7 +1,10 @@
 package io.corementor.mindexpanse.service;
 
+import io.corementor.mindexpanse.dto.DivisionQuestion;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -107,6 +110,27 @@ public class NumberGeneratorService {
         }
         return digits;
     }
+
+
+    public List<DivisionQuestion> generateDivisionQuestions(int count, int min, int max) {
+        Random random = new Random();
+        List<DivisionQuestion> questions = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+            int number1 = random.nextInt(max - min + 1) + min;
+            int number2 = random.nextInt(max - min + 1) + min;
+
+            // avoid divide by zero
+            while (number2 == 0) {
+                number2 = random.nextInt(max - min + 1) + min;
+            }
+
+            questions.add(new DivisionQuestion(number1, number2));
+        }
+
+        return questions;
+    }
+
 
 
 }
