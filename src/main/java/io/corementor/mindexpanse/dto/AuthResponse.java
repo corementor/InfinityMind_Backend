@@ -1,51 +1,30 @@
 package io.corementor.mindexpanse.dto;
 
 
+import lombok.Data;
 
-
+@Data
 public class AuthResponse {
     private String names;
     private String email;
-    private String token;
+    private String username;
+    private String accessToken;
+    private String refreshToken;
+    private String message;
 
-
-
-    public AuthResponse() {
-    }
-
-    public AuthResponse(String names, String email, String token  ) {
+    public AuthResponse(String names, String email, String username, String accessToken, String refreshToken,String message) {
         this.names = names;
         this.email = email;
-        this.token = token;
-
+        this.username = username;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.message=message;
     }
 
-    public AuthResponse(Object o, Object o1, Object o2,  String invalidUsernameOrPassword) {
-    }
-
-    public String getNames() {
-        return names;
-    }
-
-    public void setNames(String names) {
+    // Keep old constructor for backward compatibility
+    public AuthResponse(String names, String email, String accessToken) {
         this.names = names;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
+        this.accessToken = accessToken;
     }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-
 }
