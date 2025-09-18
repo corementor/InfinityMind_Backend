@@ -8,11 +8,11 @@
         <version>3.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>org.test</groupId>
-    <artifactId>MindExpanse-Backend</artifactId>
+    <groupId>io.corementor.infinitymind</groupId>
+    <artifactId>InfinityMind-Backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>MindExpanse-Backend</name>
-    <description>MindExpanse-Backend</description>
+    <name>InfinityMind-Backend</name>
+    <description>InfinityMind-Backend</description>
     <url/>
     <licenses>
         <license/>
@@ -31,10 +31,7 @@
     </properties>
     <dependencies>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
