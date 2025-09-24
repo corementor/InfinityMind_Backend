@@ -6,12 +6,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+/**
+ * The Class EmailService.
+ * @author Blaise Mugisha.
+ * @version 1.0
+ */
 @RequiredArgsConstructor
 @Service
 public class EmailService {
-
+    /**
+     * The Java mail sender.
+     */
     private final JavaMailSender mailSender;
 
+    /**
+     * Send welcome email.
+     * @param toEmail String
+     * @param username String
+     * @param firstName String
+     * @throws MessagingException Exception
+     */
     public void sendWelcomeEmail(String toEmail, String username, String firstName) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

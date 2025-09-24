@@ -8,18 +8,40 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-
-
+/**
+ * The class User.
+ *
+ * @author Blaise Mugisha
+ * @version 1.0
+ */
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+    /**
+     * The id.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    /**
+     * The firstName.
+     */
     private String firstName;
+    /**
+     * The lastName.
+     */
     private String lastName;
+    /**
+     * The email.
+     */
     private String email;
+    /**
+     * The username.
+     */
     private String username;
+    /**
+     * The password.
+     */
     private String password;
 
     public User() {

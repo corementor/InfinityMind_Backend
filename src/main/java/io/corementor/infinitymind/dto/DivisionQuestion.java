@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class DivisionQuestion {
-    private final int number1; // dividend
-    private  final int number2; // divisor
+    private final int number1;
+    private  final int number2;
 
     public DivisionQuestion(int number1, int number2) {
         this.number1 = number1;

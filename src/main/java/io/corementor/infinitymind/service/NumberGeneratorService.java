@@ -7,11 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * The class Number Generator Service.
+ * @author Blaise Mugisha
+ * @version 1.0
+ */
 @Service
 public class NumberGeneratorService {
-
-
-
+    /**
+     * Random number generator
+     */
+    Random random = new Random();
     /**
      *
      * Generate Random 2D Array
@@ -32,7 +38,7 @@ public class NumberGeneratorService {
         }
 
         int[][] array = new int[rows][cols];
-        Random random = new Random();
+
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -74,7 +80,6 @@ public class NumberGeneratorService {
 
 
     public List<DivisionQuestion> generateDivisionQuestions(int count, int min, int max) {
-        Random random = new Random();
         List<DivisionQuestion> questions = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {

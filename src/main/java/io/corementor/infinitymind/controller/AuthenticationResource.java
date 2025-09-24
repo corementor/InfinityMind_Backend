@@ -5,34 +5,35 @@ import io.corementor.infinitymind.model.User;
 import jakarta.persistence.EntityExistsException;
 
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import io.corementor.infinitymind.dto.AuthResponse;
 import io.corementor.infinitymind.dto.LoginDto;
-import io.corementor.infinitymind.dto.Userdto;
+import io.corementor.infinitymind.dto.UserDto;
 import io.corementor.infinitymind.repository.IUserRepository;
 import io.corementor.infinitymind.service.AuthenticationService;
 import io.corementor.infinitymind.service.JwtService;
 
-import java.util.HashMap;
 import java.util.Map;
+
+/**
+ * The class Authentication Resource.
+ *
+ * @author Blaise Mugisha
+ * @version 1.0
+ */
 
 @RequiredArgsConstructor
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
-public class AuthController {
+public class AuthenticationResource {
     /**
      * The Authentication service.
      */
@@ -45,6 +46,13 @@ public class AuthController {
      * The IUser repository interface.
      */
     private final IUserRepository userRepository;
+
+    /**
+     * login
+     *
+     * @param loginRequest the LoginDto
+     * @return responseEntity
+     */
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginDto loginRequest) {
@@ -69,11 +77,23 @@ public class AuthController {
         }
     }
 
+    /**
+     * refresh
+     *
+     * @param request the refreshTokenRequest
+     * @return responseEntity
+     */
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
         return ResponseEntity.ok(authService.refreshToken(request));
     }
 
+    /**
+     * refresh
+     *
+     * @param authHeader the String authHeader
+     * @return responseEntity
+     */
     @PostMapping("/validate-token")
     public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authHeader) {
         try {
@@ -118,10 +138,16 @@ public class AuthController {
         }
     }
 
+    /**
+     * signUp
+     *
+     * @param userDto the userDto
+     * @return responseEntity
+     */
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody Userdto userdto) {
+    public ResponseEntity<?> signUp(@RequestBody UserDto userDto) {
         try {
-            return ResponseEntity.ok(authService.registerUser(userdto));
+            return ResponseEntity.ok(authService.registerUser(userDto));
         } catch (EntityExistsException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "Email already exists."));
         } catch (Exception ex) {
@@ -129,8 +155,8 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/user-info")
-    public Map<String, Object> user(/*@AuthenticationPrincipal OAuth2User principal*/) {
+   /* @GetMapping("/user-info")
+    public Map<String, Object> user(*//*@AuthenticationPrincipal OAuth2User principal*//*) {
         Map<String, Object> userInfo = new HashMap<>();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof AnonymousAuthenticationToken) {
@@ -142,5 +168,5 @@ public class AuthController {
             return userInfo;
         }
         throw new EntityNotFoundException("No object found");
-    }
+    }*/
 }

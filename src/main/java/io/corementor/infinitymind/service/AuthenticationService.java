@@ -1,6 +1,7 @@
 package io.corementor.infinitymind.service;
 
 import io.corementor.infinitymind.dto.RefreshTokenRequest;
+import io.corementor.infinitymind.dto.UserDto;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityExistsException;
 
@@ -13,22 +14,46 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import io.corementor.infinitymind.dto.AuthResponse;
 import io.corementor.infinitymind.dto.LoginDto;
-import io.corementor.infinitymind.dto.Userdto;
 import io.corementor.infinitymind.model.User;
 import io.corementor.infinitymind.repository.IUserRepository;
 
 import java.util.Optional;
 
+/**
+ * The class Authentication Service.
+ *
+ * @author Blaise Mugisha
+ * @version 1.0
+ */
 @RequiredArgsConstructor
 @Service
 public class AuthenticationService implements IAuthenticationService {
-
+    /**
+     * The user repository.
+     */
     private final IUserRepository userRepository;
+    /**
+     * The jwt service.
+     */
     private final JwtService jwtService;
+    /**
+     * The authentication manager.
+     */
     private final AuthenticationManager authenticationManager;
+    /**
+     * The password encoder.
+     */
     private final PasswordEncoder passwordEncoder;
+    /**
+     * The email service.
+     */
     private final EmailService emailService;
 
+    /**
+     * Authenticate the user.
+     * @param request the LoginDto
+     * @return AuthResponse
+     */
     public AuthResponse authenticate(LoginDto request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -52,6 +77,12 @@ public class AuthenticationService implements IAuthenticationService {
                 "Login Successfully"
         );
     }
+
+    /**
+     * Refresh the token.
+     * @param request the RefreshTokenRequest
+     * @return AuthResponse
+     */
     public AuthResponse refreshToken(RefreshTokenRequest request) {
         try {
             String refreshToken = request.getRefreshToken();
@@ -97,9 +128,13 @@ public class AuthenticationService implements IAuthenticationService {
         }
     }
 
-
-    public String createUsername(Userdto userdto) {
-        String baseUsername = (userdto.getFirstName().toLowerCase() + "." + userdto.getLastName().toLowerCase()).replaceAll("\\s+", "");
+    /**
+     * Create the username.
+     * @param userDto the UserDto
+     * @return String
+     */
+    public String createUsername(UserDto userDto) {
+        String baseUsername = (userDto.getFirstName().toLowerCase() + "." + userDto.getLastName().toLowerCase()).replaceAll("\\s+", "");
         String username = baseUsername;
         int suffix = 1;
         while (userRepository.findUsersByUsername(username).isPresent()) {
@@ -108,10 +143,16 @@ public class AuthenticationService implements IAuthenticationService {
         }
         return username;
     }
+
+    /**
+     * Register the user.
+     * @param userDto the UserDto
+     * @return AuthResponse
+     */
     @Override
-    public AuthResponse registerUser(Userdto userdto) {
-        validateUserDto(userdto);
-        String email = userdto.getEmail().toLowerCase();
+    public AuthResponse registerUser(UserDto userDto) {
+        validateUserDto(userDto);
+        String email = userDto.getEmail().toLowerCase();
 
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isPresent()) {
@@ -119,12 +160,12 @@ public class AuthenticationService implements IAuthenticationService {
         }
 
         User user = new User();
-        user.setFirstName(userdto.getFirstName());
-        user.setLastName(userdto.getLastName());
-        String username = createUsername(userdto);
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        String username = createUsername(userDto);
         user.setUsername(username);
         user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(userdto.getPassword()));
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepository.save(user);
 
         try {
@@ -146,17 +187,22 @@ public class AuthenticationService implements IAuthenticationService {
         );
     }
 
-    private void validateUserDto(Userdto userdto) {
-        if (userdto.getFirstName() == null || userdto.getFirstName().isBlank()) {
+    /**
+     * Validate the userDto.
+     * @param userDto the UserDto
+     */
+
+    private void validateUserDto(UserDto userDto) {
+        if (userDto.getFirstName() == null || userDto.getFirstName().isBlank()) {
             throw new IllegalArgumentException("First name cannot be null or empty");
         }
-        if (userdto.getLastName() == null || userdto.getLastName().isBlank()) {
+        if (userDto.getLastName() == null || userDto.getLastName().isBlank()) {
             throw new IllegalArgumentException("Last name cannot be null or empty");
         }
-        if (userdto.getEmail() == null || userdto.getEmail().isBlank()) {
+        if (userDto.getEmail() == null || userDto.getEmail().isBlank()) {
             throw new IllegalArgumentException("Email cannot be null or empty");
         }
-        if (userdto.getPassword() == null || userdto.getPassword().isBlank()) {
+        if (userDto.getPassword() == null || userDto.getPassword().isBlank()) {
             throw new IllegalArgumentException("Password cannot be null or empty");
         }
     }

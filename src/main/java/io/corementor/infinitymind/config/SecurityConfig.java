@@ -26,20 +26,31 @@ import io.corementor.infinitymind.service.MyUserDetailService;
 
 import java.util.Arrays;
 
+/**
+ * The class Security Config.
+ *
+ * @author Blaise Mugisha
+ * @version 1.0
+ */
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-
+    /**
+     * The Jwt Auth Filter.
+     */
     private final JwtAuthFilter jwtAuthFilter;
+    /**
+     * The My User Detail Service.
+     */
     private final MyUserDetailService userDetailService;
 
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList( "https://mindexpanse.corementor.io","http://localhost:5173/"));
+        configuration.setAllowedOrigins(Arrays.asList("https://mindexpanse.corementor.io", "http://localhost:5173/"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Access-Control-Allow-Methods", "Access-Control-Allow-Credentials"));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));

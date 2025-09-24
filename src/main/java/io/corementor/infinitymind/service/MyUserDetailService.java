@@ -11,11 +11,25 @@ import io.corementor.infinitymind.repository.IUserRepository;
 
 import java.util.Optional;
 
+/**
+ * The class My User Detail Service.
+ * @author Blaise Mugisha
+ * @version 1.0
+ */
 @RequiredArgsConstructor
 @Service
 public class MyUserDetailService implements UserDetailsService {
+    /**
+     * The user repository.
+     */
     private  final IUserRepository userRepository;
 
+    /**
+     * Load user by username.
+     * @param username the username
+     * @return the user details
+     * @throws UsernameNotFoundException if the user is not found
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User>user=userRepository.findUsersByUsername(username);

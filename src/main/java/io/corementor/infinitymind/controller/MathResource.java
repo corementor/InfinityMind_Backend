@@ -12,16 +12,16 @@ import io.corementor.infinitymind.service.NumberGeneratorService;
 import java.util.*;
 
 /**
- * The class MathController.
+ * The class Math Controller.
  *
- * @author Blaise Mugisha.
+ * @author Blaise Mugisha
  * @version 1.0
  */
 @RestController
 @RequestMapping("/api/v1/math")
 @Slf4j
 @RequiredArgsConstructor
-public class MathController {
+public class MathResource {
     /**
      * The numberGeneratorService is used to generate random numbers
      */
@@ -52,6 +52,7 @@ public class MathController {
             @RequestParam int min,
             @RequestParam int max
     ) {
+        log.info("Generate Array endpoint :: reached");
         int[][] array = numberGeneratorService.generateRandom2DArray(rows, cols, min, max);
         numberGeneratorService.printArray(array);
         return numberGeneratorService.generateRandom2DArray(rows, cols, min, max);
@@ -67,6 +68,7 @@ public class MathController {
     @PostMapping("/verify-additions")
     public ResponseEntity<Map<String, Object>> verifyAddition(
             @RequestBody List<Map<String, Object>> userAnswerWithQuestions) {
+        log.info("Addition endpoint :: reached");
         Map<String, Object> results = calculationService.calculateSum(userAnswerWithQuestions);
         return ResponseEntity.ok(
                 results
@@ -83,6 +85,7 @@ public class MathController {
      */
     @PostMapping("/verify-subtractions")
     public ResponseEntity<Map<String, Object>> verifySubtractionsAnswers(@RequestBody List<Map<String, Object>> userAnswerWithQuestions) {
+       log.info("Subtraction endpoint :: reached");
         Map<String, Object> results = calculationService.calculateSubtraction(userAnswerWithQuestions);
         return ResponseEntity.ok(
                 results
@@ -99,6 +102,7 @@ public class MathController {
 
     @PostMapping("/verify-multiplications")
     public ResponseEntity<Map<String, Object>> verifyMultiplication(@RequestBody List<Map<String, Object>> userAnswerWithQuestions) {
+        log.info("Multiplication endpoint :: reached");
         Map<String, Object> results = calculationService.calculateMultiplication(userAnswerWithQuestions);
         return ResponseEntity.status(HttpStatus.OK).body(results);
     }
