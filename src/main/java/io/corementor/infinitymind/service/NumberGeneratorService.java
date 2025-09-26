@@ -86,7 +86,6 @@ public class NumberGeneratorService {
             int number1 = random.nextInt(max - min + 1) + min;
             int number2 = random.nextInt(max - min + 1) + min;
 
-            // avoid divide by zero
             while (number2 == 0) {
                 number2 = random.nextInt(max - min + 1) + min;
             }

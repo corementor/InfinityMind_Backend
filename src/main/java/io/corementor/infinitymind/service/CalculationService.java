@@ -137,7 +137,7 @@ public class CalculationService {
             int number2 = ((Number) questionAnswer.get("number2")).intValue();
             int userAnswer = ((Number) questionAnswer.get("answer")).intValue();
 
-            // Get user's borrow inputs (matching frontend property names)
+            // Get user's borrow inputs
             Map<String, Integer> userBorrows = (Map<String, Integer>) questionAnswer.get("borrows");
             int userTensBorrow = userBorrows.getOrDefault("tens", 0);
             int userHundredsBorrow = userBorrows.getOrDefault("hundreds", 0);
@@ -241,7 +241,7 @@ public class CalculationService {
      * @param userAnswerWithQuestions the user's answers
      * @return Map containing the results, score,percentage,maxScore,total questions,correct carries,correct partial products and carry validations
      */
-    public Map<String, Object> calculateMultiplication(List<Map<String, Object>> userAnswerWithQuestions) {
+    /*public Map<String, Object> calculateMultiplication(List<Map<String, Object>> userAnswerWithQuestions) {
         List<String> results = new ArrayList<>();
         List<Map<String, Boolean>> carryValidationResults = new ArrayList<>();
         List<Map<String, Integer>> correctCarriesList = new ArrayList<>();
@@ -345,8 +345,357 @@ public class CalculationService {
         finalResult.put("correctPartialProducts", partialProductsList);
         finalResult.put("carryValidation", carryValidationResults);
         return finalResult;
+    }*/
+
+/*
+    public Map<String, Object> calculateMultiplication(List<Map<String, Object>> userAnswerWithQuestions) {
+        List<String> results = new ArrayList<>();
+        List<Map<String, Boolean>> carryValidationResults = new ArrayList<>();
+        List<Map<String, Integer>> correctCarriesList = new ArrayList<>();
+        List<Map<String, Integer>> partialProductsList = new ArrayList<>();
+        int totalScore = 0;
+        final int MAX_SCORE_PER_QUESTION = 4;
+
+        for (Map<String, Object> questionAnswer : userAnswerWithQuestions) {
+            int number1 = ((Number) questionAnswer.get("number1")).intValue();
+            int number2 = ((Number) questionAnswer.get("number2")).intValue();
+            int userAnswer = ((Number) questionAnswer.get("answer")).intValue();
+
+            Map<String, Integer> userCarries = (Map<String, Integer>) questionAnswer.get("carries");
+            Map<String, Integer> userPartialProducts = (Map<String, Integer>) questionAnswer.get("partialProducts");
+
+            int correctAnswer = number1 * number2;
+
+            // Extract digits dynamically based on number size
+            int[] digits1 = extractDigitsDynamic(number1);
+            int[] digits2 = extractDigitsDynamic(number2);
+
+            // Determine how many partial products we need (based on number2's digits)
+            int maxDigits = Math.max(digits1.length, digits2.length);
+            int partialProductsCount = digits2.length; // One partial product per digit in number2
+
+            // Calculate partial products with correct place values
+            Map<String, Integer> correctPartialProducts = new HashMap<>();
+            List<Integer> calculatedPartialProducts = new ArrayList<>();
+
+            for (int i = 0; i < partialProductsCount; i++) {
+                int multiplier = digits2[i]; // Get digit at position i
+                int partialProduct = number1 * multiplier;
+                correctPartialProducts.put("partialProduct" + (i + 1), partialProduct);
+                calculatedPartialProducts.add(partialProduct);
+            }
+
+            // Fill remaining partial products with 0 if needed
+            for (int i = partialProductsCount; i < 4; i++) {
+                correctPartialProducts.put("partialProduct" + (i + 1), 0);
+            }
+
+            // Calculate carries for EACH partial product multiplication
+            Map<String, Integer> correctCarries = new HashMap<>();
+
+            // Calculate carries for each digit position in the multiplication
+            int carry = 0;
+            int carryIndex = 0;
+
+            // Calculate carries for the ones-digit multiplication (first partial product)
+            for (int i = 0; i < digits1.length; i++) {
+                int product = digits1[i] * digits2[0] + carry;
+                int digit = product % 10;
+                carry = product / 10;
+
+                if (i == 0) {
+                    correctCarries.put("carryOnesToTens", carry);
+                    carryIndex++;
+                } else if (i == 1) {
+                    correctCarries.put("carryTensToHundreds", carry);
+                    carryIndex++;
+                } else if (i == 2) {
+                    correctCarries.put("carryHundredsToThousands", carry);
+                    carryIndex++;
+                } else if (i == 3) {
+                    correctCarries.put("carryThousandsToTenThousands", carry);
+                    carryIndex++;
+                }
+            }
+
+            // Fill remaining carries with 0
+            while (carryIndex < 4) {
+                correctCarries.put(getCarryKey(carryIndex), 0);
+                carryIndex++;
+            }
+
+            // Verify user inputs
+            boolean allPartialProductsCorrect = true;
+            for (int i = 0; i < 4; i++) {
+                String key = "partialProduct" + (i + 1);
+                int userPP = userPartialProducts.getOrDefault(key, -1);
+                int correctPP = correctPartialProducts.getOrDefault(key, -2);
+                if (userPP != correctPP) {
+                    allPartialProductsCorrect = false;
+                    break;
+                }
+            }
+
+            boolean allCarriesCorrect = true;
+            for (int i = 0; i < 4; i++) {
+                String key = getCarryKey(i);
+                int userCarry = userCarries.getOrDefault(key, -1);
+                int correctCarry = correctCarries.getOrDefault(key, -2);
+                if (userCarry != correctCarry) {
+                    allCarriesCorrect = false;
+                    break;
+                }
+            }
+
+            boolean answerCorrect = (correctAnswer == userAnswer);
+
+            // Scoring
+            int questionScore = 0;
+
+            if (answerCorrect) {
+                questionScore += 2; // Base points for correct answer
+
+                if (allPartialProductsCorrect) {
+                    questionScore += 1;
+                }
+
+                if (allCarriesCorrect) {
+                    questionScore += 1;
+                }
+            }
+
+            totalScore += questionScore;
+
+            // Result message
+            String resultMessage;
+            if (answerCorrect && allPartialProductsCorrect && allCarriesCorrect) {
+                resultMessage = "Perfect! All correct";
+            } else if (answerCorrect && allPartialProductsCorrect) {
+                resultMessage = "Answer and partial products correct";
+            } else if (answerCorrect && allCarriesCorrect) {
+                resultMessage = "Answer and carries correct";
+            } else if (answerCorrect) {
+                resultMessage = "Only final answer correct";
+            } else if (allPartialProductsCorrect && allCarriesCorrect) {
+                resultMessage = "Steps correct but final answer wrong";
+            } else {
+                resultMessage = "Multiple errors in calculation";
+            }
+
+            results.add(resultMessage);
+
+            // Store validation for UI
+            Map<String, Boolean> validation = new HashMap<>();
+            for (int i = 0; i < 4; i++) {
+                String ppKey = "partialProduct" + (i + 1);
+                int userPP = userPartialProducts.getOrDefault(ppKey, -1);
+                int correctPP = correctPartialProducts.getOrDefault(ppKey, -2);
+                validation.put(ppKey + "Correct", userPP == correctPP);
+            }
+
+            for (int i = 0; i < 4; i++) {
+                String carryKey = getCarryKey(i);
+                int userCarry = userCarries.getOrDefault(carryKey, -1);
+                int correctCarry = correctCarries.getOrDefault(carryKey, -2);
+                validation.put(carryKey + "Correct", userCarry == correctCarry);
+            }
+
+            validation.put("finalAnswerCorrect", answerCorrect);
+            carryValidationResults.add(validation);
+            correctCarriesList.add(correctCarries);
+            partialProductsList.add(correctPartialProducts);
+        }
+
+        int maxPossibleScore = userAnswerWithQuestions.size() * MAX_SCORE_PER_QUESTION;
+        int percentageScore = maxPossibleScore > 0 ? (totalScore * 100) / maxPossibleScore : 0;
+
+        Map<String, Object> finalResult = new HashMap<>();
+        finalResult.put("results", results);
+        finalResult.put("score", totalScore);
+        finalResult.put("percentage", percentageScore);
+        finalResult.put("maxScore", maxPossibleScore);
+        finalResult.put("total", userAnswerWithQuestions.size());
+        finalResult.put("correctCarries", correctCarriesList);
+        finalResult.put("correctPartialProducts", partialProductsList);
+        finalResult.put("carryValidation", carryValidationResults);
+
+        return finalResult;
+    }
+*/
+
+
+    public Map<String, Object> calculateMultiplication(List<Map<String, Object>> userAnswerWithQuestions) {
+        List<String> results = new ArrayList<>();
+        List<Map<String, Boolean>> carryValidationResults = new ArrayList<>();
+        List<Map<String, Integer>> correctCarriesList = new ArrayList<>();
+        List<Map<String, Integer>> partialProductsList = new ArrayList<>();
+        int totalScore = 0;
+        final int MAX_SCORE_PER_QUESTION = 4;
+
+        for (Map<String, Object> questionAnswer : userAnswerWithQuestions) {
+            int number1 = ((Number) questionAnswer.get("number1")).intValue();
+            int number2 = ((Number) questionAnswer.get("number2")).intValue();
+            int userAnswer = ((Number) questionAnswer.get("answer")).intValue();
+
+            Map<String, Integer> userCarries = (Map<String, Integer>) questionAnswer.get("carries");
+            Map<String, Integer> userPartialProducts = (Map<String, Integer>) questionAnswer.get("partialProducts");
+
+            int correctAnswer = number1 * number2;
+
+            // Extract digits
+            int[] digits2 = extractDigitsDynamic(number2);
+
+            // Calculate CORRECT partial products (with place values)
+            Map<String, Integer> correctPartialProducts = new HashMap<>();
+
+            // PP1: number1 × ones digit
+            int pp1 = number1 * (number2 % 10);
+            correctPartialProducts.put("partialProduct1", pp1);
+
+            // PP2: number1 × tens digit × 10
+            int pp2 = number1 * ((number2 / 10) % 10) * 10;
+            correctPartialProducts.put("partialProduct2", pp2);
+
+            // PP3 and PP4 are 0 for 2-digit numbers
+            correctPartialProducts.put("partialProduct3", 0);
+            correctPartialProducts.put("partialProduct4", 0);
+
+            // Calculate CORRECT carries
+            Map<String, Integer> correctCarries = new HashMap<>();
+            int[] digits1 = extractDigitsDynamic(number1);
+
+            // Carries for ones-digit multiplication
+            int carry1 = (digits1[0] * digits2[0]) / 10; // ones × ones carry
+            int intermediate = (digits1[1] * digits2[0]) + carry1;
+            int carry2 = intermediate / 10; // tens × ones + carry
+
+            correctCarries.put("carryOnesToTens", carry1);
+            correctCarries.put("carryTensToHundreds", carry2);
+            correctCarries.put("carryHundredsToThousands", 0);
+            correctCarries.put("carryThousandsToTenThousands", 0);
+
+            // Check user inputs against correct values
+            boolean pp1Correct = userPartialProducts.getOrDefault("partialProduct1", -1) == pp1;
+            boolean pp2Correct = userPartialProducts.getOrDefault("partialProduct2", -1) == pp2;
+            boolean pp3Correct = userPartialProducts.getOrDefault("partialProduct3", 0) == 0;
+            boolean pp4Correct = userPartialProducts.getOrDefault("partialProduct4", 0) == 0;
+
+            boolean carry1Correct = userCarries.getOrDefault("carryOnesToTens", -1) == carry1;
+            boolean carry2Correct = userCarries.getOrDefault("carryTensToHundreds", -1) == carry2;
+            boolean carry3Correct = userCarries.getOrDefault("carryHundredsToThousands", 0) == 0;
+            boolean carry4Correct = userCarries.getOrDefault("carryThousandsToTenThousands", 0) == 0;
+
+            boolean answerCorrect = (correctAnswer == userAnswer);
+
+            // SIMPLE SCORING - Only check relevant components for 2-digit numbers
+            int questionScore = 0;
+
+            if (answerCorrect) {
+                questionScore += 2; // Base points for correct answer
+
+                // For 2-digit numbers, only check PP1 and PP2
+                if (pp1Correct && pp2Correct) {
+                    questionScore += 1;
+                }
+
+                // For 2-digit numbers, only check the first 2 carries
+                if (carry1Correct && carry2Correct) {
+                    questionScore += 1;
+                }
+            }
+
+            totalScore += questionScore;
+
+            // Result message based on actual performance
+            String resultMessage;
+            if (answerCorrect && pp1Correct && pp2Correct && carry1Correct && carry2Correct) {
+                resultMessage = "Perfect! All correct";
+            } else if (answerCorrect && pp1Correct && pp2Correct) {
+                resultMessage = "Answer and partial products correct";
+            } else if (answerCorrect && carry1Correct && carry2Correct) {
+                resultMessage = "Answer and carries correct";
+            } else if (answerCorrect) {
+                resultMessage = "Only final answer correct";
+            } else {
+                resultMessage = "Answer incorrect";
+            }
+
+            results.add(resultMessage);
+
+            // Validation for UI - show what was actually correct/wrong
+            Map<String, Boolean> validation = new HashMap<>();
+            validation.put("partialProduct1Correct", pp1Correct);
+            validation.put("partialProduct2Correct", pp2Correct);
+            validation.put("partialProduct3Correct", pp3Correct);
+            validation.put("partialProduct4Correct", pp4Correct);
+
+            validation.put("carryOnesToTensCorrect", carry1Correct);
+            validation.put("carryTensToHundredsCorrect", carry2Correct);
+            validation.put("carryHundredsToThousandsCorrect", carry3Correct);
+            validation.put("carryThousandsToTenThousandsCorrect", carry4Correct);
+
+            validation.put("finalAnswerCorrect", answerCorrect);
+
+            carryValidationResults.add(validation);
+            correctCarriesList.add(correctCarries);
+            partialProductsList.add(correctPartialProducts);
+        }
+
+        int maxPossibleScore = userAnswerWithQuestions.size() * MAX_SCORE_PER_QUESTION;
+        int percentageScore = maxPossibleScore > 0 ? (totalScore * 100) / maxPossibleScore : 0;
+
+        Map<String, Object> finalResult = new HashMap<>();
+        finalResult.put("results", results);
+        finalResult.put("score", totalScore);
+        finalResult.put("percentage", percentageScore);
+        finalResult.put("maxScore", maxPossibleScore);
+        finalResult.put("total", userAnswerWithQuestions.size());
+        finalResult.put("correctCarries", correctCarriesList);
+        finalResult.put("correctPartialProducts", partialProductsList);
+        finalResult.put("carryValidation", carryValidationResults);
+
+        return finalResult;
+    }
+    /**
+     * Extracts digits from a number dynamically based on its length.
+     * @param number int
+     * @return int[]
+     */
+    private int[] extractDigitsDynamic(int number) {
+        if (number == 0) return new int[]{0};
+
+        int temp = number;
+        int digitCount = 0;
+        while (temp > 0) {
+            digitCount++;
+            temp /= 10;
+        }
+
+        int[] digits = new int[digitCount];
+        temp = number;
+        for (int i = 0; i < digitCount; i++) {
+            digits[i] = temp % 10;
+            temp /= 10;
+        }
+
+        return digits;
     }
 
+
+
+
+
+
+    // Helper method to get carry key names
+    private String getCarryKey(int index) {
+        switch (index) {
+            case 0: return "carryOnesToTens";
+            case 1: return "carryTensToHundreds";
+            case 2: return "carryHundredsToThousands";
+            case 3: return "carryThousandsToTenThousands";
+            default: return "carryOnesToTens";
+        }
+    }
     public Map<String, Object> calculateDivision(List<Map<String, Object>> userAnswerWithQuestions) {
         List<String> results = new ArrayList<>();
         List<Map<String, Boolean>> stepValidationResults = new ArrayList<>();

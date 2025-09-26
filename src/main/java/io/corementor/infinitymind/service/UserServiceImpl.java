@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import io.corementor.infinitymind.exception.EmailNotFoundException;
 import io.corementor.infinitymind.model.User;
 import io.corementor.infinitymind.repository.IUserRepository;
-
 import java.util.Optional;
 
 /**
