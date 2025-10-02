@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 /**
- * The class CalculationService.
+ * The class Calculation Service.
  *
  * @author Blaise Mugisha
  * @version 1.0
@@ -241,288 +241,6 @@ public class CalculationService {
      * @param userAnswerWithQuestions the user's answers
      * @return Map containing the results, score,percentage,maxScore,total questions,correct carries,correct partial products and carry validations
      */
-    /*public Map<String, Object> calculateMultiplication(List<Map<String, Object>> userAnswerWithQuestions) {
-        List<String> results = new ArrayList<>();
-        List<Map<String, Boolean>> carryValidationResults = new ArrayList<>();
-        List<Map<String, Integer>> correctCarriesList = new ArrayList<>();
-        List<Map<String, Integer>> partialProductsList = new ArrayList<>();
-        int totalScore = 0;
-        final int MAX_SCORE_PER_QUESTION = 4; // Higher max score due to complexity
-
-        for (Map<String, Object> questionAnswer : userAnswerWithQuestions) {
-            int number1 = ((Number) questionAnswer.get("number1")).intValue();
-            int number2 = ((Number) questionAnswer.get("number2")).intValue();
-            int userAnswer = ((Number) questionAnswer.get("answer")).intValue();
-
-            // Get user's carry inputs and partial products
-            Map<String, Integer> userCarries = (Map<String, Integer>) questionAnswer.get("carries");
-            Map<String, Integer> userPartialProducts = (Map<String, Integer>) questionAnswer.get("partialProducts");
-
-            int[] digits1 = numberGeneratorService.extractDigits(number1);
-            int[] digits2 = numberGeneratorService.extractDigits(number2);
-            int correctAnswer = number1 * number2;
-
-            // Calculate correct multiplication steps
-            Map<String, Integer> correctCarries = new HashMap<>();
-            Map<String, Boolean> carryValidation = new HashMap<>();
-            Map<String, Integer> correctPartialProducts = new HashMap<>();
-            int questionScore = 0;
-
-            // Calculate partial products and carries
-            int partialProduct1 = number1 * digits2[0]; // Multiply by ones digit
-            int partialProduct2 = number1 * digits2[1] * 10; // Multiply by tens digit
-            int partialProduct3 = number1 * digits2[2] * 100; // Multiply by hundreds digit
-
-            // Store correct partial products
-            correctPartialProducts.put("partialProduct1", partialProduct1);
-            correctPartialProducts.put("partialProduct2", partialProduct2);
-            correctPartialProducts.put("partialProduct3", partialProduct3);
-
-            // Verify user's partial products
-            boolean partialProductsCorrect =
-                    userPartialProducts.getOrDefault("partialProduct1", -1) == partialProduct1 &&
-                            userPartialProducts.getOrDefault("partialProduct2", -1) == partialProduct2 &&
-                            userPartialProducts.getOrDefault("partialProduct3", -1) == partialProduct3;
-
-            // Calculate carries for each multiplication step
-            int carryOnesToTens = (digits1[0] * digits2[0]) / 10;
-            int carryTensToHundreds = (digits1[1] * digits2[0] + (digits1[0] * digits2[0]) / 10) / 10;
-
-            correctCarries.put("carryOnesToTens", carryOnesToTens);
-            correctCarries.put("carryTensToHundreds", carryTensToHundreds);
-
-            // Verify user's carries
-            boolean carriesCorrect =
-                    userCarries.getOrDefault("carryOnesToTens", -1) == carryOnesToTens &&
-                            userCarries.getOrDefault("carryTensToHundreds", -1) == carryTensToHundreds;
-
-            boolean answerCorrect = correctAnswer == userAnswer;
-
-            // Scoring - more points available due to complexity
-            if (answerCorrect) {
-                questionScore += 2;
-                if (carriesCorrect) {
-                    questionScore += 1;
-                }
-                if (partialProductsCorrect) {
-                    questionScore += 1;
-                }
-            }
-            totalScore += questionScore;
-
-            // Result message
-            String resultMessage;
-            if (answerCorrect && carriesCorrect && partialProductsCorrect) {
-                resultMessage = "Perfect! All steps correct";
-            } else if (answerCorrect && carriesCorrect) {
-                resultMessage = "Answer and carries correct but partial products wrong";
-            } else if (answerCorrect && partialProductsCorrect) {
-                resultMessage = "Answer and partial products correct but carries wrong";
-            } else if (answerCorrect) {
-                resultMessage = "Only final answer correct";
-            } else if (carriesCorrect && partialProductsCorrect) {
-                resultMessage = "Steps correct but final answer wrong";
-            } else {
-                resultMessage = "Multiple errors in calculation";
-            }
-
-            results.add(resultMessage);
-            carryValidationResults.add(carryValidation);
-            correctCarriesList.add(correctCarries);
-            partialProductsList.add(correctPartialProducts);
-        }
-
-        int maxPossibleScore = userAnswerWithQuestions.size() * MAX_SCORE_PER_QUESTION;
-        int percentageScore = maxPossibleScore > 0 ? (totalScore * 100) / maxPossibleScore : 0;
-
-        Map<String, Object> finalResult = new HashMap<>();
-        finalResult.put("results", results);
-        finalResult.put("score", totalScore);
-        finalResult.put("percentage", percentageScore);
-        finalResult.put("maxScore", maxPossibleScore);
-        finalResult.put("total", userAnswerWithQuestions.size());
-        finalResult.put("correctCarries", correctCarriesList);
-        finalResult.put("correctPartialProducts", partialProductsList);
-        finalResult.put("carryValidation", carryValidationResults);
-        return finalResult;
-    }*/
-
-/*
-    public Map<String, Object> calculateMultiplication(List<Map<String, Object>> userAnswerWithQuestions) {
-        List<String> results = new ArrayList<>();
-        List<Map<String, Boolean>> carryValidationResults = new ArrayList<>();
-        List<Map<String, Integer>> correctCarriesList = new ArrayList<>();
-        List<Map<String, Integer>> partialProductsList = new ArrayList<>();
-        int totalScore = 0;
-        final int MAX_SCORE_PER_QUESTION = 4;
-
-        for (Map<String, Object> questionAnswer : userAnswerWithQuestions) {
-            int number1 = ((Number) questionAnswer.get("number1")).intValue();
-            int number2 = ((Number) questionAnswer.get("number2")).intValue();
-            int userAnswer = ((Number) questionAnswer.get("answer")).intValue();
-
-            Map<String, Integer> userCarries = (Map<String, Integer>) questionAnswer.get("carries");
-            Map<String, Integer> userPartialProducts = (Map<String, Integer>) questionAnswer.get("partialProducts");
-
-            int correctAnswer = number1 * number2;
-
-            // Extract digits dynamically based on number size
-            int[] digits1 = extractDigitsDynamic(number1);
-            int[] digits2 = extractDigitsDynamic(number2);
-
-            // Determine how many partial products we need (based on number2's digits)
-            int maxDigits = Math.max(digits1.length, digits2.length);
-            int partialProductsCount = digits2.length; // One partial product per digit in number2
-
-            // Calculate partial products with correct place values
-            Map<String, Integer> correctPartialProducts = new HashMap<>();
-            List<Integer> calculatedPartialProducts = new ArrayList<>();
-
-            for (int i = 0; i < partialProductsCount; i++) {
-                int multiplier = digits2[i]; // Get digit at position i
-                int partialProduct = number1 * multiplier;
-                correctPartialProducts.put("partialProduct" + (i + 1), partialProduct);
-                calculatedPartialProducts.add(partialProduct);
-            }
-
-            // Fill remaining partial products with 0 if needed
-            for (int i = partialProductsCount; i < 4; i++) {
-                correctPartialProducts.put("partialProduct" + (i + 1), 0);
-            }
-
-            // Calculate carries for EACH partial product multiplication
-            Map<String, Integer> correctCarries = new HashMap<>();
-
-            // Calculate carries for each digit position in the multiplication
-            int carry = 0;
-            int carryIndex = 0;
-
-            // Calculate carries for the ones-digit multiplication (first partial product)
-            for (int i = 0; i < digits1.length; i++) {
-                int product = digits1[i] * digits2[0] + carry;
-                int digit = product % 10;
-                carry = product / 10;
-
-                if (i == 0) {
-                    correctCarries.put("carryOnesToTens", carry);
-                    carryIndex++;
-                } else if (i == 1) {
-                    correctCarries.put("carryTensToHundreds", carry);
-                    carryIndex++;
-                } else if (i == 2) {
-                    correctCarries.put("carryHundredsToThousands", carry);
-                    carryIndex++;
-                } else if (i == 3) {
-                    correctCarries.put("carryThousandsToTenThousands", carry);
-                    carryIndex++;
-                }
-            }
-
-            // Fill remaining carries with 0
-            while (carryIndex < 4) {
-                correctCarries.put(getCarryKey(carryIndex), 0);
-                carryIndex++;
-            }
-
-            // Verify user inputs
-            boolean allPartialProductsCorrect = true;
-            for (int i = 0; i < 4; i++) {
-                String key = "partialProduct" + (i + 1);
-                int userPP = userPartialProducts.getOrDefault(key, -1);
-                int correctPP = correctPartialProducts.getOrDefault(key, -2);
-                if (userPP != correctPP) {
-                    allPartialProductsCorrect = false;
-                    break;
-                }
-            }
-
-            boolean allCarriesCorrect = true;
-            for (int i = 0; i < 4; i++) {
-                String key = getCarryKey(i);
-                int userCarry = userCarries.getOrDefault(key, -1);
-                int correctCarry = correctCarries.getOrDefault(key, -2);
-                if (userCarry != correctCarry) {
-                    allCarriesCorrect = false;
-                    break;
-                }
-            }
-
-            boolean answerCorrect = (correctAnswer == userAnswer);
-
-            // Scoring
-            int questionScore = 0;
-
-            if (answerCorrect) {
-                questionScore += 2; // Base points for correct answer
-
-                if (allPartialProductsCorrect) {
-                    questionScore += 1;
-                }
-
-                if (allCarriesCorrect) {
-                    questionScore += 1;
-                }
-            }
-
-            totalScore += questionScore;
-
-            // Result message
-            String resultMessage;
-            if (answerCorrect && allPartialProductsCorrect && allCarriesCorrect) {
-                resultMessage = "Perfect! All correct";
-            } else if (answerCorrect && allPartialProductsCorrect) {
-                resultMessage = "Answer and partial products correct";
-            } else if (answerCorrect && allCarriesCorrect) {
-                resultMessage = "Answer and carries correct";
-            } else if (answerCorrect) {
-                resultMessage = "Only final answer correct";
-            } else if (allPartialProductsCorrect && allCarriesCorrect) {
-                resultMessage = "Steps correct but final answer wrong";
-            } else {
-                resultMessage = "Multiple errors in calculation";
-            }
-
-            results.add(resultMessage);
-
-            // Store validation for UI
-            Map<String, Boolean> validation = new HashMap<>();
-            for (int i = 0; i < 4; i++) {
-                String ppKey = "partialProduct" + (i + 1);
-                int userPP = userPartialProducts.getOrDefault(ppKey, -1);
-                int correctPP = correctPartialProducts.getOrDefault(ppKey, -2);
-                validation.put(ppKey + "Correct", userPP == correctPP);
-            }
-
-            for (int i = 0; i < 4; i++) {
-                String carryKey = getCarryKey(i);
-                int userCarry = userCarries.getOrDefault(carryKey, -1);
-                int correctCarry = correctCarries.getOrDefault(carryKey, -2);
-                validation.put(carryKey + "Correct", userCarry == correctCarry);
-            }
-
-            validation.put("finalAnswerCorrect", answerCorrect);
-            carryValidationResults.add(validation);
-            correctCarriesList.add(correctCarries);
-            partialProductsList.add(correctPartialProducts);
-        }
-
-        int maxPossibleScore = userAnswerWithQuestions.size() * MAX_SCORE_PER_QUESTION;
-        int percentageScore = maxPossibleScore > 0 ? (totalScore * 100) / maxPossibleScore : 0;
-
-        Map<String, Object> finalResult = new HashMap<>();
-        finalResult.put("results", results);
-        finalResult.put("score", totalScore);
-        finalResult.put("percentage", percentageScore);
-        finalResult.put("maxScore", maxPossibleScore);
-        finalResult.put("total", userAnswerWithQuestions.size());
-        finalResult.put("correctCarries", correctCarriesList);
-        finalResult.put("correctPartialProducts", partialProductsList);
-        finalResult.put("carryValidation", carryValidationResults);
-
-        return finalResult;
-    }
-*/
-
 
     public Map<String, Object> calculateMultiplication(List<Map<String, Object>> userAnswerWithQuestions) {
         List<String> results = new ArrayList<>();
@@ -696,13 +414,14 @@ public class CalculationService {
             default: return "carryOnesToTens";
         }
     }
+
     public Map<String, Object> calculateDivision(List<Map<String, Object>> userAnswerWithQuestions) {
         List<String> results = new ArrayList<>();
         List<Map<String, Boolean>> stepValidationResults = new ArrayList<>();
         List<Map<String, Integer>> correctStepsList = new ArrayList<>();
         List<Map<String, Integer>> correctRemaindersList = new ArrayList<>();
         int totalScore = 0;
-        final int MAX_SCORE_PER_QUESTION = 4; // Points for answer, quotient digits, and remainder
+        final int MAX_SCORE_PER_QUESTION = 6; // More granular scoring
 
         for (Map<String, Object> questionAnswer : userAnswerWithQuestions) {
             int dividend = ((Number) questionAnswer.get("number1")).intValue();
@@ -712,113 +431,63 @@ public class CalculationService {
 
             // Get user's step inputs
             Map<String, Integer> userSteps = (Map<String, Integer>) questionAnswer.get("steps");
-            Map<String, Integer> userRemainders = (Map<String, Integer>) questionAnswer.get("intermediateRemainders");
+            Map<String, Integer> userIntermediateRemainders = (Map<String, Integer>) questionAnswer.get("intermediateRemainders");
 
+            // Calculate correct answer
             int correctQuotient = dividend / divisor;
-            int correctRemainder = dividend % divisor;
+            int correctFinalRemainder = dividend % divisor;
 
-            Map<String, Integer> correctSteps = new HashMap<>();
+            // Perform step-by-step long division
+            DivisionStepResult stepResult = performLongDivision(dividend, divisor);
+
+            Map<String, Integer> correctSteps = stepResult.getSteps();
+            Map<String, Integer> correctIntermediateRemainders = stepResult.getIntermediateRemainders();
             Map<String, Boolean> stepValidation = new HashMap<>();
-            Map<String, Integer> correctIntermediateRemainders = new HashMap<>();
+
             int questionScore = 0;
 
-            // Calculate division steps
-            int[] dividendDigits = numberGeneratorService.extractDigits(dividend);
-            int[] divisorDigits = numberGeneratorService.extractDigits(divisor);
+            // Validate each step
+            boolean step1Correct = validateStep(userSteps, correctSteps, "step1");
+            boolean step2Correct = validateStep(userSteps, correctSteps, "step2");
+            boolean step3Correct = validateStep(userSteps, correctSteps, "step3");
 
-            // Long division steps
-            int currentDividend = 0;
-            int step = 0;
-            int[] partialDividends = new int[3];
-            int[] partialQuotients = new int[3];
-            int[] partialRemainders = new int[3];
+            boolean remainder1Correct = validateStep(userIntermediateRemainders, correctIntermediateRemainders, "remainder1");
+            boolean remainder2Correct = validateStep(userIntermediateRemainders, correctIntermediateRemainders, "remainder2");
+            boolean remainder3Correct = validateStep(userIntermediateRemainders, correctIntermediateRemainders, "remainder3");
 
-            // Step 1: First partial division (thousands place)
-            if (dividend >= 1000) {
-                currentDividend = dividendDigits[3] * 1000 + dividendDigits[2] * 100;
-                partialQuotients[0] = currentDividend / divisor;
-                partialRemainders[0] = currentDividend % divisor;
-                partialDividends[0] = currentDividend;
-                correctSteps.put("step1", partialQuotients[0]);
-                correctIntermediateRemainders.put("remainder1", partialRemainders[0]);
-                step++;
-            }
-
-            // Step 2: Second partial division (hundreds place)
-            if (dividend >= 100) {
-                currentDividend = partialRemainders[0] * 100 + dividendDigits[1] * 10;
-                if (step == 0) {
-                    currentDividend = dividendDigits[3] * 1000 + dividendDigits[2] * 100 + dividendDigits[1] * 10;
-                }
-                partialQuotients[1] = currentDividend / divisor;
-                partialRemainders[1] = currentDividend % divisor;
-                partialDividends[1] = currentDividend;
-                correctSteps.put("step2", partialQuotients[1]);
-                correctIntermediateRemainders.put("remainder2", partialRemainders[1]);
-                step++;
-            }
-
-            // Step 3: Final partial division (tens and ones place)
-            currentDividend = partialRemainders[1] * 10 + dividendDigits[0];
-            if (step == 0) {
-                currentDividend = dividend;
-            } else if (step == 1) {
-                currentDividend = partialRemainders[0] * 100 + dividendDigits[1] * 10 + dividendDigits[0];
-            }
-            partialQuotients[2] = currentDividend / divisor;
-            partialRemainders[2] = currentDividend % divisor;
-            partialDividends[2] = currentDividend;
-            correctSteps.put("step3", partialQuotients[2]);
-            correctIntermediateRemainders.put("remainder3", partialRemainders[2]);
-
-            // Verify user's steps
-            boolean stepsCorrect = true;
-            for (int i = 0; i < 3; i++) {
-                if (userSteps.getOrDefault("step" + (i + 1), -1) != partialQuotients[i]) {
-                    stepValidation.put("step" + (i + 1) + "Correct", false);
-                    stepsCorrect = false;
-                } else {
-                    stepValidation.put("step" + (i + 1) + "Correct", true);
-                }
-
-                if (userRemainders.getOrDefault("remainder" + (i + 1), -1) != partialRemainders[i]) {
-                    stepValidation.put("remainder" + (i + 1) + "Correct", false);
-                    stepsCorrect = false;
-                } else {
-                    stepValidation.put("remainder" + (i + 1) + "Correct", true);
-                }
-            }
+            // Store validation results
+            stepValidation.put("step1Correct", step1Correct);
+            stepValidation.put("step2Correct", step2Correct);
+            stepValidation.put("step3Correct", step3Correct);
+            stepValidation.put("remainder1Correct", remainder1Correct);
+            stepValidation.put("remainder2Correct", remainder2Correct);
+            stepValidation.put("remainder3Correct", remainder3Correct);
 
             boolean quotientCorrect = correctQuotient == userQuotient;
-            boolean remainderCorrect = correctRemainder == userRemainder;
+            boolean finalRemainderCorrect = correctFinalRemainder == userRemainder;
 
-            // Scoring
+            // Scoring system (6 points total)
             if (quotientCorrect) {
-                questionScore += 2; // Base points for correct answer
-                if (remainderCorrect) {
-                    questionScore += 1; // Additional point for correct remainder
-                }
-                if (stepsCorrect) {
-                    questionScore += 1; // Additional point for correct steps
-                }
+                questionScore += 3; // 3 points for correct final quotient
             }
+
+            if (finalRemainderCorrect) {
+                questionScore += 1; // 1 point for correct final remainder
+            }
+
+            // Award points for correct working steps
+            int correctStepsCount = 0;
+            if (step1Correct && remainder1Correct) correctStepsCount++;
+            if (step2Correct && remainder2Correct) correctStepsCount++;
+            if (step3Correct && remainder3Correct) correctStepsCount++;
+
+            questionScore += Math.min(2, correctStepsCount); // Max 2 points for working
+
             totalScore += questionScore;
 
-            // Result message
-            String resultMessage;
-            if (quotientCorrect && remainderCorrect && stepsCorrect) {
-                resultMessage = "Perfect! All steps and answers correct";
-            } else if (quotientCorrect && remainderCorrect) {
-                resultMessage = "Answer correct but some steps wrong";
-            } else if (quotientCorrect && stepsCorrect) {
-                resultMessage = "Quotient and steps correct but remainder wrong";
-            } else if (quotientCorrect) {
-                resultMessage = "Only final quotient correct";
-            } else if (stepsCorrect) {
-                resultMessage = "Steps correct but final answer wrong";
-            } else {
-                resultMessage = "Multiple errors in calculation";
-            }
+            // Generate detailed result message
+            String resultMessage = generateDetailedResultMessage(
+                    quotientCorrect, finalRemainderCorrect, correctStepsCount, 3);
 
             results.add(resultMessage);
             stepValidationResults.add(stepValidation);
@@ -838,7 +507,99 @@ public class CalculationService {
         finalResult.put("correctSteps", correctStepsList);
         finalResult.put("correctRemainders", correctRemaindersList);
         finalResult.put("stepValidation", stepValidationResults);
+
         return finalResult;
+    }
+
+    /**
+     * Performs step-by-step long division matching real-life method
+     */
+    private DivisionStepResult performLongDivision(int dividend, int divisor) {
+        String dividendStr = String.valueOf(dividend);
+        int dividendLength = dividendStr.length();
+
+        Map<String, Integer> steps = new HashMap<>();
+        Map<String, Integer> intermediateRemainders = new HashMap<>();
+
+        int currentRemainder = 0;
+        int stepCount = 0;
+
+        // Process each digit of dividend from left to right
+        for (int i = 0; i < dividendLength && stepCount < 3; i++) {
+            int currentDigit = Character.getNumericValue(dividendStr.charAt(i));
+            int currentDividend = currentRemainder * 10 + currentDigit;
+
+            // Skip if current dividend is smaller than divisor (except for last digits)
+            if (currentDividend < divisor && i < dividendLength - 1) {
+                currentRemainder = currentDividend;
+                continue;
+            }
+
+            stepCount++;
+            int stepQuotient = currentDividend / divisor;
+            int stepRemainder = currentDividend % divisor;
+
+            steps.put("step" + stepCount, stepQuotient);
+            intermediateRemainders.put("remainder" + stepCount, stepRemainder);
+
+            currentRemainder = stepRemainder;
+        }
+
+        // Fill remaining steps with 0 if not used
+        for (int i = stepCount + 1; i <= 3; i++) {
+            steps.put("step" + i, 0);
+            intermediateRemainders.put("remainder" + i, 0);
+        }
+
+        return new DivisionStepResult(steps, intermediateRemainders);
+    }
+
+    /**
+     * Helper method to validate individual steps
+     *
+     */
+    private boolean validateStep(Map<String, Integer> userValues, Map<String, Integer> correctValues, String key) {
+        int userValue = userValues.getOrDefault(key, -999);
+        int correctValue = correctValues.getOrDefault(key, 0);
+        return userValue == correctValue;
+    }
+
+    /**
+     * Generate detailed result message based on performance
+     */
+    private String generateDetailedResultMessage(boolean quotientCorrect, boolean remainderCorrect,
+                                                 int correctSteps, int totalSteps) {
+        if (quotientCorrect && remainderCorrect && correctSteps == totalSteps) {
+            return "Perfect! All steps, quotient, and remainder correct";
+        } else if (quotientCorrect && remainderCorrect && correctSteps > 0) {
+            return "Quotient and remainder correct, most working steps correct";
+        } else if (quotientCorrect && remainderCorrect) {
+            return "Final answer correct but working steps need improvement";
+        } else if (quotientCorrect && correctSteps > totalSteps / 2) {
+            return "Quotient correct with good working, check remainder";
+        } else if (quotientCorrect) {
+            return "Quotient correct but remainder and working steps incorrect";
+        } else if (correctSteps > totalSteps / 2) {
+            return "Working steps mostly correct but final calculation wrong";
+        } else {
+            return "Multiple errors - review long division method";
+        }
+    }
+
+    /**
+     * Helper class to store division step results
+     */
+    private static class DivisionStepResult {
+        private final Map<String, Integer> steps;
+        private final Map<String, Integer> intermediateRemainders;
+
+        public DivisionStepResult(Map<String, Integer> steps, Map<String, Integer> intermediateRemainders) {
+            this.steps = steps;
+            this.intermediateRemainders = intermediateRemainders;
+        }
+
+        public Map<String, Integer> getSteps() { return steps; }
+        public Map<String, Integer> getIntermediateRemainders() { return intermediateRemainders; }
     }
 
 }

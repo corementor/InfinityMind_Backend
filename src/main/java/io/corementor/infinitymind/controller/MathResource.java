@@ -1,6 +1,6 @@
 package io.corementor.infinitymind.controller;
 
-import io.corementor.infinitymind.dto.DivisionQuestion;
+import io.corementor.infinitymind.dto.DivisionRequest;
 import io.corementor.infinitymind.service.CalculationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,6 @@ public class MathResource {
 
     @GetMapping("/generateArray")
     public int[][] generateNumbers(
-
             @RequestParam int rows,
             @RequestParam int cols,
             @RequestParam int min,
@@ -120,23 +119,74 @@ public class MathResource {
         return ResponseEntity.status(HttpStatus.OK).body(results);
     }
 
-
     /**
-     * generateDivisionQuestion
+     * Generate division questions based on user preferences
      *
-     * @param count count
-     * @param min   min
-     * @param max   max
-     * @return List
+     * @param request DivisionRequest containing preferences
+     * @return List of division questions
      */
-    @GetMapping("/generate-division")
-    public List<DivisionQuestion> generateDivisionQuestions(
-            @RequestParam(defaultValue = "5") int count,
-            @RequestParam(defaultValue = "1") int min,
-            @RequestParam(defaultValue = "1000") int max
-    ) {
-        List<DivisionQuestion> array = numberGeneratorService.generateDivisionQuestions(count, min, max);
-        return numberGeneratorService.generateDivisionQuestions(count, min, max);
+    @PostMapping("/division/questions")  // Updated endpoint path
+    public ResponseEntity<Map<String, Object>> generateDivisionQuestions(@RequestBody DivisionRequest request) {
+        try {
+            log.info("Divisioin  number generation reached");
+            // Validate input
+            if (request.getNumberOfQuestions() <= 0 || request.getNumberOfQuestions() > 50) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Number of questions must be between 1 and 50", "success", false));
+            }
+
+            List<Map<String, Object>> questions = numberGeneratorService.generateDivisionQuestions(
+                    request.getNumberOfQuestions(),
+                    request.getComplexity(),
+                    request.getNumberOfDigits()
+            );
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("questions", questions);
+            response.put("success", true);
+            response.put("message", "Division questions generated successfully");
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("error", "Failed to generate questions: " + e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorResponse);
+        }
     }
 
+    /**
+     * Verify and score division answers
+     *
+     * @param answers List of user answers with questions
+     * @return Scoring results with detailed feedback
+     */
+    @PostMapping("/division/verify")
+    public ResponseEntity<Map<String, Object>> verifyDivisionAnswers(@RequestBody List<Map<String, Object>> answers) {
+        try {
+            log.info("Divisioin  answer generation reached");
+            // Validate input
+            if (answers == null || answers.isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "No answers provided", "success", false));
+            }
+
+            Map<String, Object> results = calculationService.calculateDivision(answers);
+            results.put("success", true);
+
+            return ResponseEntity.ok(results);
+
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("error", "Failed to verify answers: " + e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorResponse);
+        }
+    }
 }
+
