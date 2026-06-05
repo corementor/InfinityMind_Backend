@@ -1,0 +1,102 @@
+22:57:36.329 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+22:57:36.454 [restartedMain] INFO  i.c.i.InfinityMindWebApplication - Starting InfinityMindWebApplication using Java 20.0.2 with PID 8404 (D:\PROJECT X\InfinityMind\InfinityMind-Backend\target\classes started by BLAISE MUGISHA in D:\PROJECT X\InfinityMind\InfinityMind-Backend)
+22:57:36.456 [restartedMain] INFO  i.c.i.InfinityMindWebApplication - No active profile set, falling back to 1 default profile: "default"
+22:57:36.642 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+22:57:36.642 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+22:57:39.443 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+22:57:39.725 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 212 ms. Found 1 JPA repository interface.
+22:57:42.578 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+22:57:42.600 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+22:57:42.604 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+22:57:42.605 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.33]
+22:57:42.736 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+22:57:42.737 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 6093 ms
+22:57:43.096 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+22:57:43.276 [restartedMain] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.2.Final
+22:57:43.361 [restartedMain] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+22:57:44.209 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+22:57:44.326 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+22:57:44.800 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1a8730d8
+22:57:44.804 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+22:57:44.915 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+22:57:44.961 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 17.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+22:57:47.951 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+22:57:48.138 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+22:57:49.210 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+22:57:49.213 [restartedMain] WARN  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+22:57:49.405 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+22:57:51.944 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+22:57:52.024 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+22:57:52.071 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+22:57:52.108 [restartedMain] INFO  i.c.i.InfinityMindWebApplication - Started InfinityMindWebApplication in 16.803 seconds (process running for 19.42)
+23:08:45.551 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+23:08:45.566 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+23:08:45.656 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 90 ms
+23:08:54.598 [http-nio-8080-exec-1] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:09:05.304 [http-nio-8080-exec-5] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:09:08.549 [http-nio-8080-exec-7] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:09:10.461 [http-nio-8080-exec-8] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:09:10.649 [http-nio-8080-exec-9] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:09:10.813 [http-nio-8080-exec-10] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:09:11.006 [http-nio-8080-exec-2] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:09:11.220 [http-nio-8080-exec-1] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:09:11.406 [http-nio-8080-exec-3] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:09:18.568 [http-nio-8080-exec-6] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:09:20.366 [http-nio-8080-exec-7] INFO  i.c.i.controller.MathResource - Multiplication endpoint :: reached
+23:09:27.381 [http-nio-8080-exec-9] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:09:29.243 [http-nio-8080-exec-10] INFO  i.c.i.controller.MathResource - Subtraction endpoint :: reached
+23:09:46.230 [http-nio-8080-exec-1] INFO  i.c.i.controller.MathResource - Divisioin  number generation reached
+23:10:03.194 [http-nio-8080-exec-5] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:10:15.072 [http-nio-8080-exec-8] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:10:22.594 [http-nio-8080-exec-10] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:10:32.336 [http-nio-8080-exec-1] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:10:55.399 [http-nio-8080-exec-3] INFO  i.c.i.controller.MathResource - Multiplication endpoint :: reached
+23:11:16.605 [http-nio-8080-exec-4] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:20.524 [http-nio-8080-exec-5] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:21.028 [http-nio-8080-exec-6] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:21.561 [http-nio-8080-exec-7] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:21.771 [http-nio-8080-exec-8] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:21.946 [http-nio-8080-exec-9] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:22.120 [http-nio-8080-exec-10] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:29.216 [http-nio-8080-exec-2] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:30.853 [http-nio-8080-exec-1] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:31.299 [http-nio-8080-exec-3] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:31.497 [http-nio-8080-exec-4] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:32.005 [http-nio-8080-exec-5] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:32.926 [http-nio-8080-exec-6] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:33.696 [http-nio-8080-exec-7] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:34.417 [http-nio-8080-exec-8] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:40.033 [http-nio-8080-exec-9] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:41.674 [http-nio-8080-exec-2] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:42.121 [http-nio-8080-exec-1] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:42.310 [http-nio-8080-exec-3] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:42.495 [http-nio-8080-exec-4] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:42.692 [http-nio-8080-exec-5] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:44.023 [http-nio-8080-exec-6] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:44.230 [http-nio-8080-exec-7] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:44.409 [http-nio-8080-exec-8] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:45.939 [http-nio-8080-exec-9] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:46.086 [http-nio-8080-exec-10] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:52.673 [http-nio-8080-exec-3] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:54.144 [http-nio-8080-exec-4] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:54.593 [http-nio-8080-exec-5] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:54.912 [http-nio-8080-exec-6] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:11:55.872 [http-nio-8080-exec-7] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:12:01.507 [http-nio-8080-exec-8] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:12:02.375 [http-nio-8080-exec-10] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:12:04.245 [http-nio-8080-exec-2] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:12:42.191 [http-nio-8080-exec-3] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:12:51.584 [http-nio-8080-exec-5] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:12:54.586 [http-nio-8080-exec-6] INFO  i.c.i.controller.MathResource - Generate Array endpoint :: reached
+23:14:20.057 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+23:14:21.320 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+23:14:21.628 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+23:14:21.979 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+23:14:22.012 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

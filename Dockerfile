@@ -3,6 +3,6 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/MindExpanse-Backend-0.0.1-SNAPSHOT.jar MindExpanse-Backend.jar
+COPY --from=build /target/InfinityMind-Backend-0.0.1-SNAPSHOT.jar InfinityMind-Backend.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "MindExpanse-Backend.jar"]
+ENTRYPOINT ["java", "-jar", "InfinityMind-Backend.jar"]
